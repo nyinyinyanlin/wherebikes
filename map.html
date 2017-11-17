@@ -149,10 +149,18 @@
                        });
        tileLayer.addTo(map);
        map.locate({setView: true, maxZoom: 16, enableHighAccuracy: true, watch: true});
+       var marker;
+       var circle;
        function onLocationFound(e) {
          var radius = e.accuracy / 2;
-         var marker = L.marker(e.latlng,{draggable:true}).addTo(map);
-         var circle = L.circle(e.latlng,radius).addTo(map);
+         if(marker != undefined){
+           map.removeLayer(marker);
+         };
+         if(circle != undefined){
+           map.removeLayer(circle);
+         }
+         marker = L.marker(e.latlng,{draggable:true}).addTo(map);
+         circle = L.circle(e.latlng,radius).addTo(map);
          marker.on('drag', function (e) {
            if (circle != undefined) {
              map.removeLayer(circle);
