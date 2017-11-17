@@ -160,20 +160,20 @@
      <div id="map"></div>
      <script>
        var map = L.map('map').setView([16.8512554,96.1669349], 13);
-       var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+       var tileLayer = L.tileLayer('https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=93ef963bdd124779b6a73b2f66fcf9e6', {
                          maxZoom: 19,
                          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                        });
        tileLayer.addTo(map);
-       map.locate({setView: true, maxZoom: 16, enableHighAccuracy: true, watch: true});
+       map.locate({setView: true, maxZoom: 18, enableHighAccuracy: true, watch: true});
        var marker = L.marker(map.getCenter(),{draggable:false}).addTo(map);
        marker.on('click', function(e){
          $("#container").css("display","flex");
        });
 
        var circle;
-       function updateMarker(e){
-         /*var radius = e.accuracy / 2;
+       /*function updateMarker(e){
+         var radius = e.accuracy / 2;
          if(marker != undefined){
            map.removeLayer(marker);
          };
@@ -189,16 +189,15 @@
            };
            circle = L.circle(e.latlng,radius).addTo(map);
            $("#msg").html(marker.getLatLng().lat.toFixed(6)+" : "+marker.getLatLng().lng.toFixed(6));
-         });*/
-       }
+         });
+       }*/
 
        function onLocationFound(e) {
          if(circle!=undefined){
            circle.setRadius(e.accuracy/2);
          } else{
-           circle = L.circle(e.latLng,e.accuracy/2).addTo(map);
+           circle = L.circle(e.latlng,e.accuracy/2).addTo(map);
          }
-         map.flyTo(e.latLng);
        }
        map.on('locationfound', onLocationFound);
 
