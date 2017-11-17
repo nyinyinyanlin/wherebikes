@@ -1,0 +1,200 @@
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+          integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+            integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+            crossorigin=""></script>
+    <style>
+
+      html, body, #map {
+        height: 100%;
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+      }
+
+      #container {
+        width: 100vw;
+        height: 100%;
+        background-color: white;
+        position: absolute;
+        display: flex;
+        overflow: scroll;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 2;
+      }
+
+      #map {
+        position: absolute;
+        display: block;
+        z-index: 1;
+      }
+
+      .visible {
+        visibility: visible;
+      }
+
+      .bp, .br{
+        display: none;
+      }
+
+      .bs {
+        display: table-row;
+      }
+
+      table {
+        width: 100%;
+      }
+
+      table tr {
+        width: 100%;
+      }
+
+      table tr td {
+        width: 60%;
+      }
+
+      table tr td:first-child {
+        text-align: right;
+        width: 40%;
+      }
+
+    </style>
+  </head>
+  <body>
+     <div id="container">
+      <table>
+        <tr class="visible">
+          <td>Category:</td>
+          <td>
+            <select size="1" id="category">
+              <option value="Bicycle Shop">Bicycle Shop</option>
+              <option value="Bicycle Parking">Bicycle Parking</option>
+              <option value="Bicycle Rental">Bicycle Rental</option>
+            </select>
+          </td>
+        </tr>
+        <tr class="bs">
+          <td>Name (ENG)</td>
+          <td><input id="engname" type="text"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>Name (BUR)</td>
+          <td><input id="burname" type="text"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>Address</td>
+          <td><input id="address" type="text"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>Building No.</td>
+          <td><input id="building" type="text"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>Zip Code</td>
+          <td><input id="zipcode" type="text"></input></td>
+        </tr>
+        <tr class="bs br">
+          <td>Business Hour</td>
+          <td><input id="businesshour" type="text"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>Phone</td>
+          <td><input id="phone" type="text"></input></td>
+        </tr>
+        <tr class="bs br">
+          <td>Website</td>
+          <td><input id="website" type="text"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>Email</td>
+          <td><input id="email" type="text"></input></td>
+        </tr>
+        <tr class="bs br bp">
+          <td>Owner</td>
+          <td><input id="owner" type="text"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>Wifi</td>
+          <td><input id="wifi" type="checkbox"></input></td>
+        </tr>
+        <tr class="bs br bp">
+          <td>Comment</td>
+          <td><textarea id="comment"></textarea></td>
+        </tr>
+        <tr class="bs br bp">
+          <td></td>
+          <td>
+            <input id="cancel" type="button" value="Cancel"></input>
+            <input id="submit" type="button" value="Submit"></input>
+          </td>
+        </tr>
+      </table>
+     </div>
+     <div id="map"></div>
+     <script>
+       var map = L.map('map').setView([16.8512554,96.1669349], 13);
+       var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                         maxZoom: 19,
+                         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                       });
+       tileLayer.addTo(map);
+       map.locate({setView: true, maxZoom: 16});
+       function onLocationFound(e) {
+         var radius = e.accuracy / 2;
+         var marker = L.marker(e.latlng,{draggable:true}).addTo(map);
+         var circle = L.circle(e.latlng,radius).addTo(map);
+         marker.on('drag', function (e) {
+           if (circle != undefined) {
+             map.removeLayer(circle);
+           };
+           circle = L.circle(e.latlng,radius).addTo(map);
+         });
+         marker.on('click', function(e){
+           $("#container").show();
+         });
+       }
+       map.on('locationfound', onLocationFound);
+
+       function onLocationError(e) {
+         alert(e.message);
+       }
+       map.on('locationerror', onLocationError);
+     </script>
+     <script>
+      $(document).ready(function(){
+        $("#category").on("change",function(){
+          switch($("#category").val()){
+            case "Bicycle Shop":
+              $(".bp").hide(200);
+              $(".br").hide(200);
+              $(".bs").show(200);
+              break;
+            case "Bicycle Parking":
+              $(".bs").hide(200);
+              $(".br").hide(200);
+              $(".bp").show(200);
+              break;
+            case "Bicycle Rental":
+              $(".bs").hide(200);
+              $(".bp").hide(200);
+              $(".br").show(200);
+              break;
+          }
+        });
+        $("#cancel").on("click",function(){
+          $("#container").hide();
+        });
+      });
+     </script>
+  </body>
+</html>

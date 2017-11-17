@@ -1,0 +1,29 @@
+{
+  "name": "wherebikes",
+  "version": "1.0.0",
+  "description": "A data entry app for collection of bike shops and related data in Yangon. The task is arranged by bikesinygn and tech supported by ygnbinhaus.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bikes",
+    "shops",
+    "osm",
+    "openstreetmap",
+    "yangon",
+    "ygnbinhaus",
+    "bikesinygn",
+    "repair",
+    "cycling"
+  ],
+  "author": "Nyi Nyi Nyan Lin",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "date-and-time": "^0.5.0",
+    "express": "^4.16.2",
+    "method-override": "^2.3.10",
+    "mongodb": "^2.2.33"
+  }
+}
