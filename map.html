@@ -166,10 +166,14 @@
                        });
        tileLayer.addTo(map);
        map.locate({setView: true, maxZoom: 16, enableHighAccuracy: true, watch: true});
-       var marker;
+       var marker = L.marker(map.getCenter(),{draggable:false}).addTo(map);
+       marker.on('click', function(e){
+         $("#container").css("display","flex");
+       });
+
        var circle;
        function updateMarker(e){
-         var radius = e.accuracy / 2;
+         /*var radius = e.accuracy / 2;
          if(marker != undefined){
            map.removeLayer(marker);
          };
@@ -185,25 +189,38 @@
            };
            circle = L.circle(e.latlng,radius).addTo(map);
            $("#msg").html(marker.getLatLng().lat.toFixed(6)+" : "+marker.getLatLng().lng.toFixed(6));
-         });
-         marker.on('click', function(e){
-           $("#container").css("display","flex");
-         });
+         });*/
        }
+
        function onLocationFound(e) {
-         updateMarker(e);
+         if(circle!=undefined){
+           circle.setRadius(e.accuracy/2);
+         } else{
+           circle = L.circle(e.latLng,e.accuracy/2).addTo(map);
+         }
+         map.flyTo(e.latLng);
        }
        map.on('locationfound', onLocationFound);
 
        function onLocationError(e) {
+         if(circle!=undefined){
+           map.removeLayer(circle);
+         }
+         circle = undefined;
          alert(e.message);
        }
        map.on('locationerror', onLocationError);
 
        function onMapMove(e){
-         $("#msg").html(map.getCenter().lat.toFixed(6)+" : "+map.getCenter().lng.toFixed(6));
+         var center = map.getCenter();
+         marker.setLatLng(center);
+         if(circle!=undefined){
+           circle.setLatLng(center);
+         }
+         $("#msg").html(center.lat.toFixed(6)+" : "+center.lng.toFixed(6));
        }
        map.on('move',onMapMove);
+
      </script>
      <script>
       $(document).ready(function(){
