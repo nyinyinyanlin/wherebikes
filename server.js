@@ -1,4 +1,3 @@
-var https = require('https');
 var fs = require('fs');
 var express = require('express');
 var app = express();
@@ -21,16 +20,4 @@ app.get('/', function(request, response, next){
     response.sendFile(path.join(__dirname,"map.html"));
 });
 
-app.get('/cert',function(request, response, next){
-    response.sendFile(path.join(__dirname,"opensslcert/server.key"));
-})
-
-var secureServer = https.createServer({
-    key: fs.readFileSync(path.join(__dirname,"opensslcert/server.key")),
-    cert: fs.readFileSync(path.join(__dirname,"opensslcert/server.crt")),
-    ca: fs.readFileSync(path.join(__dirname,"opensslcert/ca.crt")),
-    requestCert: true,
-    rejectUnauthorized: false
-}, app).listen('8080', function() {
-    console.log("Secure Express server listening on port 8080");
-});
+app.listen(port);
