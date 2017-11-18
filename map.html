@@ -36,7 +36,7 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        z-index: 3;
+        z-index: 4;
       }
 
       #map {
@@ -47,14 +47,32 @@
 
       #msg {
         position: absolute;
-        bottom: 2%;
+        bottom: 5%;
         width: auto;
         text-align: center;
         background-color: white;
-        border-radius: 10px;
-        padding: 2px 5px 0px 5px;
-        box-shadow: 0px 2px 2px 1px #888888;
+        border-radius: 5px;
+        padding: 2px 8px 2px 8px;
+        box-shadow: 0px 0px 2px 1px #888888;
         z-index: 2;
+      }
+
+      #gpscheckbox {
+        position: absolute;
+        bottom: 5%;
+        left: 5%;
+        width: auto;
+        padding: 2px 8px 2px 5px;
+        border-radius: 5px;
+        background-color: white;
+        box-shadow: 0px 0px 2px 1px #888888;
+        z-index: 3;
+      }
+
+      #gpscb {
+        vertical-align: middle;
+        height: 16px;
+        width: 16px;
       }
 
       .visible {
@@ -159,15 +177,28 @@
       </table>
      </div>
      <div id="msg">No Location</div>
+     <div id="gpscheckbox">
+       <input type="checkbox" id="gpscb" name="gpscb" checked="true"></input><label for="gpscb">GPS</label>
+     </div>
      <div id="map"></div>
      <script>
+       var poi;
        var map = L.map('map').setView([16.8512554,96.1669349], 13);
        var tileLayer = L.tileLayer('https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=93ef963bdd124779b6a73b2f66fcf9e6', {
                          maxZoom: 19,
                          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                        });
        tileLayer.addTo(map);
-       map.locate({setView: true, maxZoom: 18, enableHighAccuracy: true, watch: true});
+       if($("#gpscb").is(":checked")){
+         map.locate({setView: true, maxZoom: 19, enableHighAccuracy: true, watch: true});
+       }
+       $("#gpscb").change(function(){
+         if(this.checked){
+            map.locate({setView: true, maxZoom: 19, enableHighAccuracy: true, watch: true});
+         } else {
+            map.stopLocate();
+         }
+       })
        var marker = L.marker(map.getCenter(),{draggable:false}).addTo(map);
        marker.on('click', function(e){
          $("#container").css("display","flex");
@@ -213,12 +244,13 @@
        map.on('locationerror', onLocationError);
 
        function onMapMove(e){
-         var center = map.getCenter();
-         marker.setLatLng(center);
+         poi = L.latLng(map.getCenter().lat,map.getCenter().lng);
+         poi = poi.wrap();
+         marker.setLatLng(poi);
          if(circle!=undefined){
-           circle.setLatLng(center);
+           circle.setLatLng(poi);
          }
-         $("#msg").html(center.lat.toFixed(6)+" : "+center.lng.toFixed(6));
+         $("#msg").html(poi.lat.toFixed(6)+" : "+poi.lng.toFixed(6));
        }
        map.on('move',onMapMove);
 
