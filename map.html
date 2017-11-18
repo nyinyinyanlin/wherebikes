@@ -61,7 +61,7 @@
       #gpscheckbox {
         position: absolute;
         bottom: 5%;
-        left: 5%;
+        left: 3%;
         width: auto;
         padding: 2px 8px 2px 5px;
         border-radius: 5px;
@@ -79,7 +79,7 @@
       #mapstylecheckbox {
         position: absolute;
         bottom: 5%;
-        right: 5%;
+        right: 3%;
         width: auto;
         padding: 2px 8px 2px 5px;
         border-radius: 5px;
@@ -261,7 +261,7 @@
          if(circle!=undefined){
            circle.setLatLng(poi);
          }
-         $("#msg").html(poi.lat.toFixed(6)+" : "+poi.lng.toFixed(6));
+         $("#msg").html(poi.lat.toFixed(5)+":"+poi.lng.toFixed(5));
        }
        map.on('move',onMapMove);
 
