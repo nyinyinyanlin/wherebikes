@@ -76,6 +76,24 @@
         width: 16px;
       }
 
+      #mapstylecheckbox {
+        position: absolute;
+        bottom: 5%;
+        right: 5%;
+        width: auto;
+        padding: 2px 8px 2px 5px;
+        border-radius: 5px;
+        background-color: white;
+        box-shadow: 0px 0px 2px 1px #888888;
+        z-index: 3;
+      }
+
+      #mapstylecb {
+        vertical-align: middle;
+        height: 16px;
+        width: 16px;
+      }
+
       .visible {
         visibility: visible;
       }
@@ -177,11 +195,14 @@
      <div id="gpscheckbox">
        <input type="checkbox" id="gpscb" name="gpscb" checked="true"></input><label for="gpscb">GPS</label>
      </div>
+     <div id="mapstylecheckbox">
+       <input type="checkbox" id="mapstylecb" name="mapstylecb" checked="true"></input><label for="mapstylecb">Standard</label>
+     </div>
      <div id="map"></div>
      <script>
        var poi;
        var map = L.map('map').setView([16.8512554,96.1669349], 13);
-       var osmTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+       var standardTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                          maxZoom: 19,
                          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                        });
@@ -189,7 +210,7 @@
                          maxZoom: 20,
                          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                        });
-       humanTileLayer.addTo(map);
+       standardTileLayer.addTo(map);
        if($("#gpscb").is(":checked")){
          map.locate({setView: true, maxZoom: 18, enableHighAccuracy: true, watch: true});
        }
@@ -198,6 +219,15 @@
             map.locate({setView: true, maxZoom: 18, enableHighAccuracy: true, watch: true});
          } else {
             map.stopLocate();
+         }
+       })
+       $("#mapstylecb").change(function(){
+         if(this.checked){
+            map.removeLayer(humanTileLayer);
+            standardTileLayer.addTo(map);
+         } else {
+            map.removeLayer(standardTileLayer);
+            humanTileLayer.addTo(map);
          }
        })
        var marker = L.marker(map.getCenter(),{draggable:false}).addTo(map);
