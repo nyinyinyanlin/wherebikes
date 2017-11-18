@@ -202,26 +202,6 @@
        });
 
        var circle;
-       /*function updateMarker(e){
-         var radius = e.accuracy / 2;
-         if(marker != undefined){
-           map.removeLayer(marker);
-         };
-         if(circle != undefined){
-           map.removeLayer(circle);
-         }
-         marker = L.marker(e.center,{draggable:false}).addTo(map);
-         circle = L.circle(e.center,radius).addTo(map);
-         $("#msg").html(marker.getLatLng().lat.toFixed(6)+" : "+marker.getLatLng().lng.toFixed(6));
-         marker.on('drag', function (e) {
-           if (circle != undefined) {
-             map.removeLayer(circle);
-           };
-           circle = L.circle(e.latlng,radius).addTo(map);
-           $("#msg").html(marker.getLatLng().lat.toFixed(6)+" : "+marker.getLatLng().lng.toFixed(6));
-         });
-       }*/
-
        function onLocationFound(e) {
          if(circle!=undefined){
            circle.setRadius(e.accuracy/2);
