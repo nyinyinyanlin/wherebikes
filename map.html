@@ -47,7 +47,7 @@
 
       #msg {
         position: absolute;
-        top: 5%;
+        top: 2%;
         height: 24px;
         width: auto;
         text-align: center;
@@ -261,7 +261,7 @@
          if(circle!=undefined){
            circle.setLatLng(poi);
          }
-         $("#msg").html(poi.lat.toFixed(5)+":"+poi.lng.toFixed(5));
+         $("#msg").html(poi.lat.toFixed(6)+":"+poi.lng.toFixed(6));
        }
        map.on('move',onMapMove);
 
