@@ -181,7 +181,7 @@
      <script>
        var poi;
        var map = L.map('map').setView([16.8512554,96.1669349], 13);
-       var tileLayer = L.tileLayer('https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=93ef963bdd124779b6a73b2f66fcf9e6', {
+       var tileLayer = L.tileLayer('https://${s}.tile.openstreetmap.org/${z}/${x}/${y}.png', {
                          maxZoom: 19,
                          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                        });
