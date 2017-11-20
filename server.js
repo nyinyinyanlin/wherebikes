@@ -38,6 +38,9 @@ app.get('/dataset', function(request, response, next){
     if(err){
       response.status(200).send("Error");
     } else {
+      for(var i=0;i<results.length;i++){
+        delete results[i].id;
+      }
       response.status(200).send(JSON.stringify(results));
     }
   });
