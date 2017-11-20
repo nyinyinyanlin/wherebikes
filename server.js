@@ -20,7 +20,7 @@ mongodb.MongoClient.connect(dbUrl, {poolSize: 5}, function (err, database) {
   console.log("Database connection ready");
 });
 
-app.use(express.static('graphics'));
+app.use(express.static(path.join(__dirname,'graphics')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(methodOverride());
