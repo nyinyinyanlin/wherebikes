@@ -235,7 +235,7 @@
           $.redirect("https://wherebikes.herokuapp.com/login",{},"GET");
         }
         var poi;
-        var greenIcon = L.icon({
+        var bikeIcon = L.icon({
           iconUrl: "https://wherebikes.herokuapp.com/graphics/bike.png",
           //shadowUrl: 'leaf-shadow.png',
 
@@ -264,7 +264,7 @@
             if(dataset.length>0){
               for(var i=0;i<dataset.length;i++){
                 data = dataset[i];
-                L.marker(L.latLng(data.lat,data.lng),{draggable:false}).bindPopup("<strong>"+data.name+"</strong>").addTo(map);
+                L.marker(L.latLng(data.lat,data.lng),{draggable:false,icon:bikeIcon}).bindPopup("<strong>"+data.name+"</strong>").addTo(map);
               }
             }
           }
