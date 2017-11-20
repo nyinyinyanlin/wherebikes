@@ -235,6 +235,16 @@
           $.redirect("https://wherebikes.herokuapp.com/login",{},"GET");
         }
         var poi;
+        var greenIcon = L.icon({
+          iconUrl: "https://wherebikes.herokuapp.com/graphics/bike.png",
+          //shadowUrl: 'leaf-shadow.png',
+
+          iconSize:     [128, 128], // size of the icon
+          //shadowSize:   [50, 64], // size of the shadow
+          iconAnchor:   [64, 64], // point of the icon which will correspond to marker's location
+          //shadowAnchor: [4, 62],  // the same for the shadow
+          popupAnchor:  [64, 104] // point from which the popup should open relative to the iconAnchor
+        });
         var map = L.map('map').setView([16.8512554,96.1669349], 13);
         var standardTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                           maxZoom: 19,
