@@ -7,9 +7,8 @@ var MongoClient = mongodb.MongoClient;
 var path = require("path");
 var methodOverride = require('method-override');
 var date = require('date-and-time');
-var port = process.env.PORT || 8080;
-//var dbUrl = process.env.MONGODB_URI || 'mongodb://localhost:27017/monetarydb';
-//var db;
+var port = process.env.PORT;
+var dbUrl = process.env.MONGODB_URI;
 
 app.use(express.static('public'))
 app.use(bodyParser.json());
