@@ -5,6 +5,8 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
+    <script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
           integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
           crossorigin=""/>
@@ -12,7 +14,6 @@
             integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
             crossorigin=""></script>
     <style>
-
       html, body, #map {
         height: 100%;
         width: 100vw;
@@ -122,7 +123,6 @@
         text-align: right;
         width: 40%;
       }
-
     </style>
   </head>
   <body>
@@ -200,74 +200,104 @@
      </div>
      <div id="map"></div>
      <script>
-       var poi;
-       var map = L.map('map').setView([16.8512554,96.1669349], 13);
-       var standardTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                         maxZoom: 19,
-                         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                       });
-       var humanTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-                         maxZoom: 20,
-                         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                       });
-       standardTileLayer.addTo(map);
-       if($("#gpscb").is(":checked")){
-         map.locate({setView: true, maxZoom: 18, enableHighAccuracy: true, watch: true});
-       }
-       $("#gpscb").change(function(){
-         if(this.checked){
-            map.locate({setView: true, maxZoom: 18, enableHighAccuracy: true, watch: true});
-         } else {
-            map.stopLocate();
-         }
-       })
-       $("#mapstylecb").change(function(){
-         if(this.checked){
-            map.removeLayer(humanTileLayer);
-            standardTileLayer.addTo(map);
-         } else {
-            map.removeLayer(standardTileLayer);
-            humanTileLayer.addTo(map);
-         }
-       })
-       var marker = L.marker(map.getCenter(),{draggable:false}).addTo(map);
-       marker.on('click', function(e){
-         $("#container").css("display","flex");
-       });
-
-       var circle;
-       function onLocationFound(e) {
-         if(circle!=undefined){
-           circle.setRadius(e.accuracy/2);
-         } else{
-           circle = L.circle(e.latlng,e.accuracy/2).addTo(map);
-         }
-       }
-       map.on('locationfound', onLocationFound);
-
-       function onLocationError(e) {
-         if(circle!=undefined){
-           map.removeLayer(circle);
-         }
-         circle = undefined;
-         alert(e.message);
-       }
-       map.on('locationerror', onLocationError);
-
-       function onMapMove(e){
-         poi = L.latLng(map.getCenter().lat,map.getCenter().lng);
-         poi = poi.wrap();
-         marker.setLatLng(poi);
-         if(circle!=undefined){
-           circle.setLatLng(poi);
-         }
-         $("#msg").html(poi.lat.toFixed(6)+" : "+poi.lng.toFixed(6));
-       }
-       map.on('move',onMapMove);
-
-     </script>
-     <script>
       $(document).ready(function(){
+        var bikeuser = Cookies.getJSON('bikeuser');
+        if(bikeuser){
+          /*$.ajax({
+            type: "POST",
+            url: "http://localhost:8080/checkuser",
+            ContentType: 'application/json; charset=utf-8',
+            data: {"username":userObj.username,"password":userObj.password},
+            success: function(data){
+              if(data.status == "SUCCESS"){
+                $("#msgbox").html("Hello "+data.user.name).css("color","green").fadeIn(200).delay(4000).fadeOut(200);
+                $("#name").html(data.user.name);
+                $("#nrc").html(data.user.nrc);
+                $("#dob").html(data.user.dob);
+                $("#address").html(data.user.address);
+                $("#tel").html(data.user.tel);
+                $("#username").html(data.user.username);
+                $("#password").html(data.user.password);
+                $("#cardid").html(data.user.cardid);
+                $("#balance").html(data.user.balance);
+                for(i=0;i<data.user.history.length;i++){
+                  var row = "<tr><td>"+data.user.history[i].date+"</td>"
+                            + "<td>"+data.user.history[i].person+"</td>";
+                  row = row + (data.user.history[i].type=="debit"?("<td>"+data.user.history[i].amount+"</td><td></td></tr>"):("<td></td><td>"+data.user.history[i].amount+"</td></tr>"));
+                  $("#historytable tr:last").after(row);
+                }
+              } else {
+                $.redirect("http://localhost:8080/");
+              }
+            }
+          });*/
+        }else{
+          $.redirect("https://wherebikes.herokuapp.com/login");
+        }
+        var poi;
+        var map = L.map('map').setView([16.8512554,96.1669349], 13);
+        var standardTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                          maxZoom: 19,
+                          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        });
+        var humanTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+                          maxZoom: 20,
+                          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        });
+        standardTileLayer.addTo(map);
+        if($("#gpscb").is(":checked")){
+          map.locate({setView: true, maxZoom: 18, enableHighAccuracy: true, watch: true});
+        }
+        $("#gpscb").change(function(){
+          if(this.checked){
+             map.locate({setView: true, maxZoom: 18, enableHighAccuracy: true, watch: true});
+          } else {
+             map.stopLocate();
+          }
+        })
+        $("#mapstylecb").change(function(){
+          if(this.checked){
+             map.removeLayer(humanTileLayer);
+             standardTileLayer.addTo(map);
+          } else {
+             map.removeLayer(standardTileLayer);
+             humanTileLayer.addTo(map);
+          }
+        })
+        var marker = L.marker(map.getCenter(),{draggable:false}).addTo(map);
+        marker.on('click', function(e){
+          $("#container").css("display","flex");
+        });
+
+        var circle;
+        function onLocationFound(e) {
+          if(circle!=undefined){
+            circle.setRadius(e.accuracy/2);
+          } else{
+            circle = L.circle(e.latlng,e.accuracy/2).addTo(map);
+          }
+        }
+        map.on('locationfound', onLocationFound);
+
+        function onLocationError(e) {
+          if(circle!=undefined){
+            map.removeLayer(circle);
+          }
+          circle = undefined;
+          alert(e.message);
+        }
+        map.on('locationerror', onLocationError);
+
+        function onMapMove(e){
+          poi = L.latLng(map.getCenter().lat,map.getCenter().lng);
+          poi = poi.wrap();
+          marker.setLatLng(poi);
+          if(circle!=undefined){
+            circle.setLatLng(poi);
+          }
+          $("#msg").html(poi.lat.toFixed(6)+" : "+poi.lng.toFixed(6));
+        }
+        map.on('move',onMapMove);
         $("#category").on("change",function(){
           switch($("#category").val()){
             case "Bicycle Shop":
