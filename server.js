@@ -9,6 +9,16 @@ var methodOverride = require('method-override');
 var date = require('date-and-time');
 var port = process.env.PORT;
 var dbUrl = process.env.MONGODB_URI;
+var db;
+
+mongodb.MongoClient.connect(dbUrl, {poolSize: 5}, function (err, database) {
+  if (err) {
+    console.log(err);
+    process.exit(1);
+  }
+  db = database;
+  console.log("Database connection ready");
+});
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -24,7 +34,13 @@ app.get('/login', function(request, response, next){
 });
 
 app.post('/check', function(request,response,next){
-    response.status(200).send("SUCCESS");
+  db.collection('users').findOne({$and:[{"username":request.body.username},{"password":request.body.password}]},function(err,result){
+    if(result){
+      response.status(200).send("SUCCESS");
+    }else{
+      response.status(200).send("ERROR");
+    }
+  });
 });
 
 app.listen(port);
