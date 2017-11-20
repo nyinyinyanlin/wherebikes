@@ -23,4 +23,8 @@ app.get('/login', function(request, response, next){
     response.sendFile(path.join(__dirname,"login.html");
 });
 
+app.post('/check', function(request,response,next){
+    response.status(200).send("SUCCESS");
+});
+
 app.listen(port);

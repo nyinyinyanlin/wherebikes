@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script>
+      $("document").ready(function() {
+        $("#login").click(function(){
+          var loginObj = {"username":$("#username").val(),
+                          "password":$("#password").val()}
+          $.ajax({
+            type: "POST",
+            url: "https://wherebikes.herokuapp.com/check",
+            ContentType: 'application/json; charset=utf-8',
+            data: loginObj,
+            success: function(data){
+              if(data == "SUCCESS"){
+                Cookies.remove("bikeuser");
+                Cookies.set("bikeuser",{"username":$("#username").val(),
+                                "password":$("#password").val()},
+                         {
+                           expires:5,
+                           domain:"wherebikes.herokuapp.com",
+                           secure:true
+                         });
+                $("#msgbox").html("Login Successful").css("color","green").fadeIn(200).delay(2000).fadeOut(200);
+                setTimeout(function(){
+                  $.redirect("https://wherebikes.herokuapp.com");
+                },2000);
+              } else {
+                $("#username").val("");
+                $("#password").val("");
+                $("#msgbox").html("Login Failed").css("color","red").fadeIn(200).delay(2000).fadeOut(200);
+              }
+            }
+          })
+        });
+      });
+    </script>
+    <style>
+      body {
+        margin: 0;
+        width: 100vw;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      #box {
+        padding: 20px;
+        text-align: center;
+        border-style: solid;
+        border-width: thin;
+        border-color: grey;
+        border-radius: 8px;
+      }
+      div {
+        margin: 1px;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box">
+      <p id="msgbox" style="display:none"></p>
+      <div>
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username"></input>
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password"></input>
+      </div>
+      <div>
+        <input type="button" name="button" value="Login" id="login"></input>
+      </div>
+    </div>
+  </body>
+</html>

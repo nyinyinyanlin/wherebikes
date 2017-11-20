@@ -201,16 +201,9 @@
      <div id="map"></div>
      <script>
       $(document).ready(function(){
-        Cookies.remove("bikeuser");
-        Cookies.set("bikeuser",{"username":"bikeuserone",
-                            "password":"helloworld"},
-                    {
-                      expires:5,
-                      domain:"wherebikes.herokuapp.com",
-                      secure:true
-                    });
         var bikeuser = Cookies.getJSON('bikeuser');
         if(bikeuser){
+          alert("You are logged in.");
           /*$.ajax({
             type: "POST",
             url: "http://localhost:8080/checkuser",
