@@ -34,13 +34,9 @@ app.get('/login', function(request, response, next){
 });
 
 app.get('/dataset', function(request, response, next){
-  db.collection('dataset').find({},function(err,result){
-    if(result){
-      delete result._id;
-      response.status(200).json(result);
-    }else{
-      response.status(200).json({});
-    };
+  db.collection('dataset').find({}).toArray(function(err, results) {
+    assert.equal(err, null);
+    response.status(200).send(JSON.stringify(results));
   });
 });
 
