@@ -203,7 +203,6 @@
       $(document).ready(function(){
         var bikeuser = Cookies.getJSON('bikeuser');
         if(bikeuser){
-          alert("You are logged in.");
           /*$.ajax({
             type: "POST",
             url: "http://localhost:8080/checkuser",
@@ -255,7 +254,6 @@
             if(dataset.length>0){
               for(var i=0;i<dataset.length;i++){
                 data = dataset[i];
-                alert(JSON.stringify(data));
                 L.marker(L.latLng(data.lat,data.lng),{draggable:false,title:data.name}).addTo(map);
               }
             }
