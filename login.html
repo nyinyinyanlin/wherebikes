@@ -7,40 +7,6 @@
             crossorigin="anonymous"></script>
     <script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-    <script>
-      $("document").ready(function() {
-        $("#login").click(function(){
-          var loginObj = {"username":$("#username").val(),
-                          "password":$("#password").val()}
-          $.ajax({
-            type: "POST",
-            url: "https://wherebikes.herokuapp.com/check",
-            ContentType: 'application/json; charset=utf-8',
-            data: loginObj,
-            success: function(data){
-              if(data == "SUCCESS"){
-                Cookies.remove("bikeuser");
-                Cookies.set("bikeuser",{"username":$("#username").val(),
-                                "password":$("#password").val()},
-                         {
-                           expires:5,
-                           domain:"wherebikes.herokuapp.com",
-                           secure:true
-                         });
-                $("#msgbox").html("Login Successful").css("color","green").fadeIn(200).delay(2000).fadeOut(200);
-                setTimeout(function(){
-                  $.redirect("https://wherebikes.herokuapp.com");
-                },2000);
-              } else {
-                $("#username").val("");
-                $("#password").val("");
-                $("#msgbox").html("Login Failed").css("color","red").fadeIn(200).delay(2000).fadeOut(200);
-              }
-            }
-          })
-        });
-      });
-    </script>
     <style>
       body {
         margin: 0;
@@ -80,5 +46,39 @@
         <input type="button" name="button" value="Login" id="login"></input>
       </div>
     </div>
+    <script>
+      $("document").ready(function() {
+        $("#login").click(function(){
+          var loginObj = {"username":$("#username").val(),
+                          "password":$("#password").val()}
+          $.ajax({
+            type: "POST",
+            url: "https://wherebikes.herokuapp.com/check",
+            ContentType: 'application/json; charset=utf-8',
+            data: loginObj,
+            success: function(data){
+              if(data == "SUCCESS"){
+                Cookies.remove("bikeuser");
+                Cookies.set("bikeuser",{"username":$("#username").val(),
+                                "password":$("#password").val()},
+                         {
+                           expires:5,
+                           domain:"wherebikes.herokuapp.com",
+                           secure:true
+                         });
+                $("#msgbox").html("Login Successful").css("color","green").fadeIn(200).delay(2000).fadeOut(200);
+                setTimeout(function(){
+                  $.redirect("https://wherebikes.herokuapp.com");
+                },2000);
+              } else {
+                $("#username").val("");
+                $("#password").val("");
+                $("#msgbox").html("Login Failed").css("color","red").fadeIn(200).delay(2000).fadeOut(200);
+              }
+            }
+          })
+        });
+      });
+    </script>
   </body>
 </html>
