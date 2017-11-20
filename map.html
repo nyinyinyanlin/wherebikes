@@ -235,6 +235,19 @@
         }else{
           $.redirect("https://wherebikes.herokuapp.com/login",{},"GET");
         }
+        $.ajax({
+          type: "GET",
+          url: "https://wherebikes.herokuapp.com/dataset",
+          ContentType: 'application/json; charset=utf-8',
+          success: function(dataset){
+            if(dataset.length>0){
+              for(var i=0;i<dataset.length;i++){
+                data = dataset[i];
+                L.marker(L.latLng(data.lat,data.lng),{draggable:false,title:data.name}).addTo(map);
+              }
+            }
+          }
+        });
         var poi;
         var map = L.map('map').setView([16.8512554,96.1669349], 13);
         var standardTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
