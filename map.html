@@ -254,7 +254,7 @@
             if(dataset.length>0){
               for(var i=0;i<dataset.length;i++){
                 data = dataset[i];
-                L.marker(L.latLng(data.lat,data.lng),{draggable:false,title:data.name}).addTo(map);
+                L.marker(L.latLng(data.lat,data.lng),{draggable:false}).bindPopup("<strong>"+data.name+"</strong>").addTo(map);
               }
             }
           }
