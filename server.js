@@ -34,7 +34,7 @@ app.get('/login', function(request, response, next){
 });
 
 app.get('/dataset', function(request, response, next){
-  db.collection('users').find({},function(err,result){
+  db.collection('dataset').find({},function(err,result){
     if(result){
       delete result._id;
       response.status(200).json(result);
