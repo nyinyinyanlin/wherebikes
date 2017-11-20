@@ -35,8 +35,11 @@ app.get('/login', function(request, response, next){
 
 app.get('/dataset', function(request, response, next){
   db.collection('dataset').find({}).toArray(function(err, results) {
-    assert.equal(err, null);
-    response.status(200).send(JSON.stringify(results));
+    if(err){
+      response.status(200).send("Error");
+    } else {
+      response.status(200).send(JSON.stringify(results));
+    }
   });
 });
 
