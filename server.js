@@ -10,7 +10,7 @@ var date = require('date-and-time');
 var port = process.env.PORT;
 var dbUrl = process.env.MONGODB_URI;
 
-app.use(express.static('public'))
+app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(methodOverride());
@@ -20,7 +20,7 @@ app.get('/', function(request, response, next){
 });
 
 app.get('/login', function(request, response, next){
-    response.sendFile(path.join(__dirname,"login.html");
+    response.sendFile(path.join(__dirname,"login.html"));
 });
 
 app.post('/check', function(request,response,next){
