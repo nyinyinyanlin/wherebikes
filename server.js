@@ -39,7 +39,7 @@ app.get('/dataset', function(request, response, next){
       response.status(200).send("Error");
     } else {
       for(var i=0;i<results.length;i++){
-        delete results[i].id;
+        delete results[i]._id;
       }
       response.status(200).send(JSON.stringify(results));
     }
