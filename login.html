@@ -68,7 +68,7 @@
                          });
                 $("#msgbox").html("Login Successful").css("color","green").fadeIn(200).delay(2000).fadeOut(200);
                 setTimeout(function(){
-                  $.redirect("https://wherebikes.herokuapp.com",method:"GET");
+                  $.redirect("https://wherebikes.herokuapp.com",{method:"GET"});
                 },2000);
               } else {
                 $("#username").val("");
