@@ -20,7 +20,7 @@ mongodb.MongoClient.connect(dbUrl, {poolSize: 5}, function (err, database) {
   console.log("Database connection ready");
 });
 
-app.use(express.static('public'));
+app.use(express.static('graphics'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(methodOverride());
@@ -41,7 +41,7 @@ app.get('/dataset', function(request, response, next){
       for(var i=0;i<results.length;i++){
         delete results[i]._id;
       }
-      response.status(200).send(JSON.stringify(results));
+      response.status(200).json(results);
     }
   });
 });
