@@ -128,51 +128,51 @@
           <td>Category:</td>
           <td>
             <select size="1" id="category">
-              <option value="Bicycle Shop">Bicycle Shop</option>
-              <option value="Bicycle Parking">Bicycle Parking</option>
-              <option value="Bicycle Rental">Bicycle Rental</option>
+              <option value="shop=bicycle">Bicycle Shop</option>
+              <option value="amenity=bicycle_parking">Bicycle Parking</option>
+              <option value="amenity=bicycle_rental">Bicycle Rental</option>
             </select>
           </td>
         </tr>
         <tr class="bs bp br">
           <td>Name (EN)</td>
-          <td><input id="nameen" type="text"></input></td>
+          <td><input id="name:en" type="text"></input></td>
         </tr>
         <tr class="bs bp br">
           <td>Name (MY)</td>
-          <td><input id="namemy" type="text"></input></td>
+          <td><input id="name:my" type="text"></input></td>
         </tr>
         <tr class="bs">
           <td>Address</td>
-          <td><input id="address" type="text"></input></td>
+          <td><input id="addr" type="text"></input></td>
         </tr>
         <tr class="bs">
           <td>Retail</td>
-          <td><input id="retail" type="checkbox"></input></td>
+          <td><input id="service:bicycle:retail" type="checkbox"></input></td>
         </tr>
         <tr class="bs">
           <td>Repair</td>
-          <td><input id="repair" type="checkbox"></input></td>
+          <td><input id="service:bicycle:repair" type="checkbox"></input></td>
         </tr>
         <tr class="bs">
           <td>Rental</td>
-          <td><input id="rental" type="checkbox"></input></td>
+          <td><input id="service:bicycle:rental" type="checkbox"></input></td>
         </tr>
         <tr class="bs">
           <td>Second Hand</td>
-          <td><input id="secondhand" type="checkbox"></input></td>
+          <td><input id="service:bicycle:second_hand" type="checkbox"></input></td>
         </tr>
         <tr class="bs">
           <td>Pump</td>
-          <td><input id="pump" type="checkbox"></input></td>
+          <td><input id="service:bicycle:pump" type="checkbox"></input></td>
         </tr>
         <tr class="bs">
           <td>Cleaning</td>
-          <td><input id="cleaning" type="checkbox"></input></td>
+          <td><input id="service:bicycle:cleaning" type="checkbox"></input></td>
         </tr>
         <tr class="bs">
           <td>Opening Hour</td>
-          <td><input id="openinghour" type="text"></input></td>
+          <td><input id="opening_hours" type="text"></input></td>
         </tr>
         <tr class="bs">
           <td>Phone</td>
@@ -354,12 +354,12 @@
         $(".br").hide();
         $("#category").on("change",function(){
           switch($("#category").val()){
-            case "Bicycle Shop":
+            case "shop=bicycle":
               $(".bp").hide(200);
               $(".br").hide(200);
               $(".bs").show(200);
               break;
-            case "Bicycle Parking":
+            case "amenity=bicycle_parking":
               $(".bs").hide(200);
               $(".br").hide(200);
               $(".bp").show(200);
@@ -373,6 +373,37 @@
         });
         $("#cancel").on("click",function(){
           $("#container").hide();
+        });
+
+        function createDataReq(var className){
+          var request = {};
+          $("."+className+" :nth-child(2) :first-child").each(function(){
+            if($(this).attr("type")=="checkbox"){
+              if($(this).is(":checked")){
+                request[$(this).attr("id")] = "yes";
+              }
+            } else {
+                if($(this).val().length>0){
+                  request[$(this).attr("id")] = $(this.val());
+                }
+            }
+            console.log(request);
+            console.log(JSON.stringify(request));
+          });
+        }
+        $("#submit").on("click",function(){
+          var req_data;
+          switch($("#category").val()){
+            case "shop=bicycle":
+                req_data = createDataReq("bs");
+              break;
+            case "amenity=bicycle_parking":
+                req_data = createDataReq("bp");
+              break;
+            case "amenity=bicycle_rental":
+                req_data = createDataReq("br");
+              break;
+          }
         });
       });
      </script>
