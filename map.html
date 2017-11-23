@@ -382,6 +382,7 @@
         function createDataReq(className){
           var request = {};
           request["username"] = bikeuser.username;
+          request["password"] = bikeuser.password;
           request["lat"] = poi.lat;
           request["lon"] = poi.lng;
           $("."+className+" :nth-child(2) :first-child").each(function(){
