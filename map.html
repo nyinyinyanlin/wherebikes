@@ -400,12 +400,15 @@
           var req_data;
           switch($("#category").val()){
             case "shop=bicycle":
+                req_data["shop"] = "bicycle";
                 req_data = createDataReq("bs");
               break;
             case "amenity=bicycle_parking":
+                req_data["amenity"] = "bicycle_parking";
                 req_data = createDataReq("bp");
               break;
             case "amenity=bicycle_rental":
+                req_data["amenity"] = "bicycle_rental";
                 req_data = createDataReq("br");
               break;
           }
@@ -429,6 +432,7 @@
                 alert("Error Inserting");
               }
             }
+          });
         });
       });
      </script>
