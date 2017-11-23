@@ -50,7 +50,7 @@
       $("document").ready(function() {
         $("#login").click(function(){
           var loginObj = {};
-          loginObj["user:name"] = $("#username").val();
+          loginObj["username"] = $("#username").val();
           loginObj["password"] = $("#password").val();
           $.ajax({
             type: "POST",
