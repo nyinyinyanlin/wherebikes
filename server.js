@@ -70,11 +70,19 @@ app.post('/check', function(request,response,next){
 app.post('/insert', function(request,response,next){
   db.collection('users').findOne({$and:[{"username":request.body.username}]},function(err,result){
     if(result){
+      if(request.body["name:my"]){
+        request.body.name = request.body["name:my"];
+      } else if(request.body["name:en"]){
+        request.body.name = request.body["name:en"];
+      }
+      if(request.body.capacity){
+        request.body.capacity = Number(request.body.capacity);
+      }
       db.collection('dataset').insertOne(request.body);
       request.body.status = "SUCCESS";
       response.status(200).json(request.body);
     }else{
-
+      response.status(200).json({status:"ERROR"});
     }
   });
 });
