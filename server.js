@@ -72,6 +72,7 @@ app.post('/check', function(request,response,next){
 });
 
 app.post('/insert', function(request,response,next){
+  console.log(request.body.username,request.body.password);
   db.collection('users').findOne({$and:[{"username":request.body.username},{"password":request.body.password}]},function(err,result){
     if(result){
       let now = new Date();
