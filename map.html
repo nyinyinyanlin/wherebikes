@@ -283,20 +283,23 @@
                           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                         });
         standardTileLayer.addTo(map);
-        $.ajax({
-          type: "GET",
-          url: "https://wherebikes.herokuapp.com/dataset",
-          ContentType: 'application/json; charset=utf-8',
-          dataType: 'json',
-          success: function(dataset){
-            if(dataset.length>0){
-              for(var i=0;i<dataset.length;i++){
-                data = dataset[i];
-                L.marker(L.latLng(data.lat,data.lng),{draggable:false,icon:bikeIcon}).bindPopup("<strong>"+data.name+"</strong>").addTo(map);
+        function populateMap(){
+          $.ajax({
+            type: "GET",
+            url: "https://wherebikes.herokuapp.com/dataset",
+            ContentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function(dataset){
+              if(dataset.length>0){
+                for(var i=0;i<dataset.length;i++){
+                  data = dataset[i];
+                  L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup("<strong>"+data.name+"</strong>").addTo(map);
+                }
               }
             }
-          }
-        });
+          });
+        }
+        populateMap();
         if($("#gpscb").is(":checked")){
           map.locate({setView: true, maxZoom: 18, enableHighAccuracy: true, watch: true});
         }
@@ -377,19 +380,21 @@
 
         function createDataReq(className){
           var request = {};
+          request["username"] = bikeuser.username;
+          request["lat"] = poi.lat;
+          request["lon"] = poi.lng;
           $("."+className+" :nth-child(2) :first-child").each(function(){
-            if($(this).attr("type")=="checkbox"){
+            if($(this).prop("type")=="checkbox"){
               if($(this).is(":checked")){
-                request[$(this).attr("id")] = "yes";
+                request[$(this).prop("id")] = "yes";
               }
             } else {
                 if($(this).val().length>0){
-                  request[$(this).attr("id")] = $(this).val();
+                  request[$(this).prop("id")] = $(this).val();
                 }
             }
-            console.log(request);
-            console.log(JSON.stringify(request));
           });
+          return request;
         }
         $("#submit").on("click",function(){
           var req_data;
@@ -404,6 +409,26 @@
                 req_data = createDataReq("br");
               break;
           }
+          $.ajax({
+            type: "POST",
+            url: "https://wherebikes.herokuapp.com/insert",
+            ContentType: 'application/json; charset=utf-8',
+            data: req_data,
+            success: function(data){
+              if(data.status == "SUCCESS"){
+                L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup("<strong>"+data.name+"</strong>").addTo(map);
+                $(":input").each(function(){
+                  if($(this).prop("type")=="checkbox"){
+                    $(this).prop("checked",false);
+                  } else {
+                    $(this).val("");
+                  }
+                });
+                $("#container").hide();
+              } else {
+                alert("Error Inserting");
+              }
+            }
         });
       });
      </script>
