@@ -49,8 +49,9 @@
     <script>
       $("document").ready(function() {
         $("#login").click(function(){
-          var loginObj = {username:$("#username").val(),
-                          password:$("#password").val()}
+          var loginObj = {"username":$("#username").val(),
+                          "password":$("#password").val()};
+          console.log(JSON.stringify(loginObj));
           $.ajax({
             type: "POST",
             url: "https://wherebikes.herokuapp.com/check",
