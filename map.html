@@ -400,16 +400,16 @@
           var req_data;
           switch($("#category").val()){
             case "shop=bicycle":
-                req_data["shop"] = "bicycle";
                 req_data = createDataReq("bs");
+                req_data["shop"] = "bicycle";
               break;
             case "amenity=bicycle_parking":
-                req_data["amenity"] = "bicycle_parking";
                 req_data = createDataReq("bp");
+                req_data["amenity"] = "bicycle_parking";
               break;
             case "amenity=bicycle_rental":
-                req_data["amenity"] = "bicycle_rental";
                 req_data = createDataReq("br");
+                req_data["amenity"] = "bicycle_rental";
               break;
           }
           $.ajax({
