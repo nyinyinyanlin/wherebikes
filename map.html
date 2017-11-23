@@ -423,7 +423,7 @@
                 $(":input").each(function(){
                   if($(this).prop("type")=="checkbox"){
                     $(this).prop("checked",false);
-                  } else {
+                  } else if($(this).prop("type")!=="button"){
                     $(this).val("");
                   }
                 });
