@@ -99,11 +99,7 @@
         visibility: visible;
       }
 
-      .bp, .br{
-        display: none;
-      }
-
-      .bs {
+      .bs .bp .br {
         display: table-row;
       }
 
@@ -354,6 +350,8 @@
           $("#msg").html(poi.lat.toFixed(6)+" : "+poi.lng.toFixed(6));
         }
         map.on('move',onMapMove);
+        $(".bp").hide();
+        $(".br").hide();
         $("#category").on("change",function(){
           switch($("#category").val()){
             case "Bicycle Shop":
