@@ -49,13 +49,13 @@
     <script>
       $("document").ready(function() {
         $("#login").click(function(){
-          var loginObj = {"username":$("#username").val(),
-                          "password":$("#password").val()}
+          var loginObj = {username:$("#username").val(),
+                          password:$("#password").val()}
           $.ajax({
             type: "POST",
             url: "https://wherebikes.herokuapp.com/check",
             ContentType: 'application/json; charset=utf-8',
-            data: loginObj,
+            data: JSON.stringify(loginObj),
             success: function(data){
               if(data == "SUCCESS"){
                 Cookies.remove("bikeuser");
