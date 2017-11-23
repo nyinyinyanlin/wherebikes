@@ -11,6 +11,10 @@ var port = process.env.PORT;
 var dbUrl = process.env.MONGODB_URI;
 var db;
 
+date.setLocales('en', {
+    A: ['AM', 'PM']
+});
+
 mongodb.MongoClient.connect(dbUrl, {poolSize: 5}, function (err, database) {
   if (err) {
     console.log(err);
@@ -68,8 +72,11 @@ app.post('/check', function(request,response,next){
 });
 
 app.post('/insert', function(request,response,next){
-  db.collection('users').findOne({$and:[{"username":request.body.username}]},function(err,result){
+  db.collection('users').findOne({$and:[{"username":request.body.username},{"password":request.body.password}]},function(err,result){
     if(result){
+      let now = new Date();
+      delete request.body.password;
+      request.body.time = date.format(now, 'DD/MM/YYYY HH:mm:ss A [GMT]Z');
       if(request.body["name:my"]){
         request.body.name = request.body["name:my"];
       } else if(request.body["name:en"]){
