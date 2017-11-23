@@ -20,6 +20,17 @@ mongodb.MongoClient.connect(dbUrl, {poolSize: 5}, function (err, database) {
   console.log("Database connection ready");
 });
 
+function processData(data){
+  var finalData;
+  var keys = Object.keys(data);
+  for(var i=0;i<keys;i++){
+    var key;
+    switch(keys[i]){
+      case "": break;
+    }
+  }
+}
+
 app.use(express.static(path.join(__dirname,'graphics')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
@@ -52,6 +63,16 @@ app.post('/check', function(request,response,next){
       response.status(200).send("SUCCESS");
     }else{
       response.status(200).send("ERROR");
+    }
+  });
+});
+
+app.post('/insert', function(request,response,next){
+  db.collection('users').findOne({$and:[{"username":request.body.username},{"password":request.body.password}]},function(err,result){
+    if(result){
+      db.collection('dataset').insertOne(request.body.data);
+    }else{
+
     }
   });
 });
