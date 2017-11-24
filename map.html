@@ -315,13 +315,13 @@
                   data = dataset[i];
                   var bikeIcon;
                   if(data.shop){
-                    icon = bikeIcon;
+                    bikeIcon = bikeShopIcon;
                   }else if(data.amenity=="bicycle_parking"){
-                    icon = bikeParkingIcon;
+                    bikeIcon = bikeParkingIcon;
                   }else if(data.amenity=="bicycle_rental"){
-                    icon = bikeRentalIcon;
+                    bikeIcon = bikeRentalIcon;
                   }
-                  L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup("<strong>"+data.name+"</strong>").addTo(map);
+                  L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup("<strong>"+(data.name?data.name:"")+"</strong>").addTo(map);
                 }
               }
             }
@@ -451,11 +451,11 @@
               if(data.status == "SUCCESS"){
                 var bikeIcon;
                 if(data.shop){
-                  icon = bikeIcon;
+                  bikeIcon = bikeShopIcon;
                 }else if(data.amenity=="bicycle_parking"){
-                  icon = bikeParkingIcon;
+                  bikeIcon = bikeParkingIcon;
                 }else if(data.amenity=="bicycle_rental"){
-                  icon = bikeRentalIcon;
+                  bikeIcon = bikeRentalIcon;
                 }
                 L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup("<strong>"+(data.name?data.name:"")+"</strong>").addTo(map);
                 $(":input").each(function(){
