@@ -263,8 +263,28 @@
           $.redirect("https://wherebikes.herokuapp.com/login",{},"GET");
         }
         var poi;
-        var bikeIcon = L.icon({
-          iconUrl: "https://wherebikes.herokuapp.com/bike.png",
+        var bikeShopIcon = L.icon({
+          iconUrl: "https://wherebikes.herokuapp.com/shop.png",
+          //shadowUrl: 'leaf-shadow.png',
+
+          iconSize:     [30, 30], // size of the icon
+          //shadowSize:   [50, 64], // size of the shadow
+          //iconAnchor:   [25, 25], // point of the icon which will correspond to marker's location
+          //shadowAnchor: [4, 62],  // the same for the shadow
+          popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
+        });
+        var bikeParkingIcon = L.icon({
+          iconUrl: "https://wherebikes.herokuapp.com/parking.png",
+          //shadowUrl: 'leaf-shadow.png',
+
+          iconSize:     [30, 30], // size of the icon
+          //shadowSize:   [50, 64], // size of the shadow
+          //iconAnchor:   [25, 25], // point of the icon which will correspond to marker's location
+          //shadowAnchor: [4, 62],  // the same for the shadow
+          popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
+        });
+        var bikeRentalIcon = L.icon({
+          iconUrl: "https://wherebikes.herokuapp.com/rental.png",
           //shadowUrl: 'leaf-shadow.png',
 
           iconSize:     [30, 30], // size of the icon
@@ -421,11 +441,19 @@
             data: req_data,
             success: function(data){
               if(data.status == "SUCCESS"){
-                L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup("<strong>"+data.name+"</strong>").addTo(map);
+                var bikeIcon;
+                if(data.shop){
+                  icon = bikeIcon;
+                }else if(data.amenity=="bicycle_parking"){
+                  icon = bikeParkingIcon;
+                }else if(data.amenity=="bicycle_rental"){
+                  icon = bikeRentalIcon;
+                }
+                L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup("<strong>"+(data.name?data.name:"")+"</strong>").addTo(map);
                 $(":input").each(function(){
                   if($(this).prop("type")=="checkbox"){
                     $(this).prop("checked",false);
-                  } else if($(this).prop("type")!=="button"){
+                  } else if($(this).prop("type")!=="button"||$(this).prop("type")!=="button"){
                     $(this).val("");
                   }
                 });
