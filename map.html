@@ -313,6 +313,14 @@
               if(dataset.length>0){
                 for(var i=0;i<dataset.length;i++){
                   data = dataset[i];
+                  var bikeIcon;
+                  if(data.shop){
+                    icon = bikeIcon;
+                  }else if(data.amenity=="bicycle_parking"){
+                    icon = bikeParkingIcon;
+                  }else if(data.amenity=="bicycle_rental"){
+                    icon = bikeRentalIcon;
+                  }
                   L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup("<strong>"+data.name+"</strong>").addTo(map);
                 }
               }
