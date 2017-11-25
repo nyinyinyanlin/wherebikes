@@ -65,6 +65,7 @@
         height: 24px;
         width: auto;
         text-align: center;
+        vertical-align: middle;
         background-color: white;
         border-radius: 5px;
         padding: 2px 8px 2px 8px;
@@ -95,7 +96,7 @@
         bottom: 5%;
         right: 3%;
         width: auto;
-        padding: 4px 8px 4px 8px;
+        padding: 3px 8px 7px 8px;
         border-radius: 5px;
         background-color: white;
         box-shadow: 0px 0px 2px 1px #888888;
@@ -132,7 +133,7 @@
      <div id="container">
       <table>
         <tr class="visible">
-          <td>Category:</td>
+          <td>အမျိုးအစား</td>
           <td>
             <select size="1" id="category">
               <option value="shop=bicycle" selected="selected">စက်ဘီးဆိုင်</option>
@@ -404,6 +405,7 @@
         });
 
         $("#cancel").on("click",function(){
+          clearInputFields();
           $("#container").hide();
         });
 
@@ -444,6 +446,16 @@
               break;
           }
 
+          functino clearInputFields(){
+            $(":input").each(function(){
+              if($(this).prop("type")=="checkbox"){
+                $(this).prop("checked",false);
+              } else if($(this).prop("type")!=="button"||$(this).prop("type")!=="button"){
+                $(this).val("");
+              }
+            });
+          }
+
           $.ajax({
             type: "POST",
             url: "https://wherebikes.herokuapp.com/insert",
@@ -452,13 +464,7 @@
             success: function(data){
               if(data.status == "SUCCESS"){
                 addBikeMarker(data);
-                $(":input").each(function(){
-                  if($(this).prop("type")=="checkbox"){
-                    $(this).prop("checked",false);
-                  } else if($(this).prop("type")!=="button"||$(this).prop("type")!=="button"){
-                    $(this).val("");
-                  }
-                });
+                clearInputFields();
                 $("#container").hide();
               } else {
                 alert("Error Inserting");
