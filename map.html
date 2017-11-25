@@ -295,7 +295,7 @@
           //shadowAnchor: [4, 62],  // the same for the shadow
           popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
         });
-        var BING_KEY = "Arqsmxff_Vub-_zHxl4ZJaq6I6ehwuVejO5w-GboGM4EO0dthpOqj5LiZUJ2Cvcm";
+
         var map = L.map('map').setView([16.8512554,96.1669349], 13);
         var standardTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                           maxZoom: 19,
@@ -305,7 +305,11 @@
                           maxZoom: 20,
                           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                         });
-        var bingTileLayer = L.tileLayer.bing(BING_KEY);
+        var bingTileLayer = L.tileLayer.bing({
+                                              maxZoom: 21,
+                                              bingMapsKey:"Arqsmxff_Vub-_zHxl4ZJaq6I6ehwuVejO5w-GboGM4EO0dthpOqj5LiZUJ2Cvcm",
+                                              imagerySet:"AerialWithLabels"
+                                            });
         standardTileLayer.addTo(map);
 
         function addBikeMarker(data){
