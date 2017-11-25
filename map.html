@@ -306,7 +306,7 @@
                           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                         });
         var bingTileLayer = L.tileLayer.bing({
-                                              maxZoom:20,
+                                              maxZoom:19,
                                               bingMapsKey:"Arqsmxff_Vub-_zHxl4ZJaq6I6ehwuVejO5w-GboGM4EO0dthpOqj5LiZUJ2Cvcm",
                                               //imagerySet:"AerialWithLabels"
                                             });
@@ -347,12 +347,12 @@
         populateMap();
 
         if($("#gpscb").is(":checked")){
-          map.locate({setView: true, maxZoom: 18, enableHighAccuracy: true, watch: true});
+          map.locate({setView: true, maxZoom: 19, enableHighAccuracy: true, watch: true});
         }
 
         $("#gpscb").change(function(){
           if(this.checked){
-             map.locate({setView: true, maxZoom: 18, enableHighAccuracy: true, watch: true});
+             map.locate({setView: true, maxZoom: 19, enableHighAccuracy: true, watch: true});
           } else {
              map.stopLocate();
           }
