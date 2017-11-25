@@ -79,7 +79,7 @@
         width: 16px;
       }
 
-      #mapstylecheckbox {
+      #mapstyleselect {
         position: absolute;
         bottom: 5%;
         right: 3%;
@@ -89,12 +89,6 @@
         background-color: white;
         box-shadow: 0px 0px 2px 1px #888888;
         z-index: 3;
-      }
-
-      #mapstylecb {
-        vertical-align: middle;
-        height: 16px;
-        width: 16px;
       }
 
       .visible {
@@ -130,7 +124,7 @@
           <td>Category:</td>
           <td>
             <select size="1" id="category">
-              <option value="shop=bicycle">Bicycle Shop</option>
+              <option value="shop=bicycle" selected="selected">Bicycle Shop</option>
               <option value="amenity=bicycle_parking">Bicycle Parking</option>
               <option value="amenity=bicycle_rental">Bicycle Rental</option>
             </select>
@@ -225,75 +219,36 @@
      <div id="gpscheckbox">
        <input type="checkbox" id="gpscb" name="gpscb" checked="true"></input><label for="gpscb">GPS</label>
      </div>
-     <div id="mapstylecheckbox">
-       <input type="checkbox" id="mapstylecb" name="mapstylecb" checked="true"></input><label for="mapstylecb">Standard</label>
-     </div>
+     <select size="1" id="mapstyleselect">
+       <option value="standard" selected="selected">Standard</option>
+       <option value="bing">Bing Aerial</option>
+       <option value="humanitarian">Humanitarian</option>
+     </select>
      <div id="map"></div>
      <script>
       $(document).ready(function(){
         var bikeuser = Cookies.getJSON('bikeuser');
         if(bikeuser){
-          /*$.ajax({
-            type: "POST",
-            url: "http://localhost:8080/checkuser",
-            ContentType: 'application/json; charset=utf-8',
-            data: {"username":userObj.username,"password":userObj.password},
-            success: function(data){
-              if(data.status == "SUCCESS"){
-                $("#msgbox").html("Hello "+data.user.name).css("color","green").fadeIn(200).delay(4000).fadeOut(200);
-                $("#name").html(data.user.name);
-                $("#nrc").html(data.user.nrc);
-                $("#dob").html(data.user.dob);
-                $("#address").html(data.user.address);
-                $("#tel").html(data.user.tel);
-                $("#username").html(data.user.username);
-                $("#password").html(data.user.password);
-                $("#cardid").html(data.user.cardid);
-                $("#balance").html(data.user.balance);
-                for(i=0;i<data.user.history.length;i++){
-                  var row = "<tr><td>"+data.user.history[i].date+"</td>"
-                            + "<td>"+data.user.history[i].person+"</td>";
-                  row = row + (data.user.history[i].type=="debit"?("<td>"+data.user.history[i].amount+"</td><td></td></tr>"):("<td></td><td>"+data.user.history[i].amount+"</td></tr>"));
-                  $("#historytable tr:last").after(row);
-                }
-              } else {
-                $.redirect("http://localhost:8080/");
-              }
-            }
-          });*/
+          //do nothing here
         }else{
           $.redirect("https://wherebikes.herokuapp.com/login",{},"GET");
         }
+
         var poi;
         var bikeShopIcon = L.icon({
           iconUrl: "https://wherebikes.herokuapp.com/shop.png",
-          //shadowUrl: 'leaf-shadow.png',
-
-          iconSize:     [25, 25], // size of the icon
-          //shadowSize:   [50, 64], // size of the shadow
-          //iconAnchor:   [25, 25], // point of the icon which will correspond to marker's location
-          //shadowAnchor: [4, 62],  // the same for the shadow
-          popupAnchor:  [0, -13] // point from which the popup should open relative to the iconAnchor
+          iconSize:     [25, 25],
+          popupAnchor:  [0, -13]
         });
         var bikeParkingIcon = L.icon({
           iconUrl: "https://wherebikes.herokuapp.com/parking.png",
-          //shadowUrl: 'leaf-shadow.png',
-
-          iconSize:     [25, 25], // size of the icon
-          //shadowSize:   [50, 64], // size of the shadow
-          //iconAnchor:   [25, 25], // point of the icon which will correspond to marker's location
-          //shadowAnchor: [4, 62],  // the same for the shadow
-          popupAnchor:  [0, -13] // point from which the popup should open relative to the iconAnchor
+          iconSize:     [25, 25],
+          popupAnchor:  [0, -13]
         });
         var bikeRentalIcon = L.icon({
           iconUrl: "https://wherebikes.herokuapp.com/rental.png",
-          //shadowUrl: 'leaf-shadow.png',
-
-          iconSize:     [25, 25], // size of the icon
-          //shadowSize:   [50, 64], // size of the shadow
-          //iconAnchor:   [25, 25], // point of the icon which will correspond to marker's location
-          //shadowAnchor: [4, 62],  // the same for the shadow
-          popupAnchor:  [0, -13] // point from which the popup should open relative to the iconAnchor
+          iconSize:     [25, 25],
+          popupAnchor:  [0, -13]
         });
 
         var map = L.map('map').setView([16.8512554,96.1669349], 13);
@@ -307,8 +262,7 @@
                         });
         var bingTileLayer = L.tileLayer.bing({
                                               maxZoom:19,
-                                              bingMapsKey:"Arqsmxff_Vub-_zHxl4ZJaq6I6ehwuVejO5w-GboGM4EO0dthpOqj5LiZUJ2Cvcm",
-                                              //imagerySet:"AerialWithLabels"
+                                              bingMapsKey:"Arqsmxff_Vub-_zHxl4ZJaq6I6ehwuVejO5w-GboGM4EO0dthpOqj5LiZUJ2Cvcm"
                                             });
         standardTileLayer.addTo(map);
 
@@ -326,7 +280,7 @@
             html += "<p>Type: Bicycle Rental</p><br>";
           }
 
-          L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup().addTo(map);
+          L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup(html).addTo(map);
         }
 
         function populateMap(){
@@ -358,13 +312,23 @@
           }
         });
 
-        $("#mapstylecb").change(function(){
-          if(this.checked){
-             map.removeLayer(bingTileLayer);
-             standardTileLayer.addTo(map);
-          } else {
-             map.removeLayer(standardTileLayer);
-             bingTileLayer.addTo(map);
+        $("#mapstyleselect").change(function(){
+          switch($("#mapstyleselect").val()){
+            case "standard":
+              standardTileLayer.addTo(map);
+              map.removeLayer(bingTileLayer);
+              map.removeLayer(humanTileLayer);
+              break;
+            case "bing":
+              bingTileLayer.addTo(map);
+              map.removeLayer(standardTileLayer);
+              map.removeLayer(humanTileLayer);
+              break;
+            case "humanitarian":
+              humanTileLayer.addTo(map);
+              map.removeLayer(standardTileLayer);
+              map.removeLayer(bingTileLayer);
+              break;
           }
         });
 
