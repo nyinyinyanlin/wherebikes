@@ -30,11 +30,11 @@
         padding: 0;
       }
 
-      body, input, select {
+      body, input[type="text"], input[type="button"], select {
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family:monospace,padauk,Yunghkio,Myanmar3,'Masterpiece Uni Sans';
+        font-family:"Courier New", Courier, monospace,padauk,Yunghkio,Myanmar3,'Masterpiece Uni Sans';
       }
 
       #container {
@@ -216,9 +216,10 @@
           <td><input id="operator" type="text"></input></td>
         </tr>
         <tr class="visible">
-          <td></td>
           <td>
             <input id="cancel" type="button" value="ပယ်ဖျက်"></input>
+          </td>
+          <td>
             <input id="submit" type="button" value="စာရင်းထည့်"></input>
           </td>
         </tr>
