@@ -408,7 +408,7 @@
           $("#container :input").each(function(){
             if($(this).prop("type")=="checkbox"){
               $(this).prop("checked",false);
-            } else if($(this).prop("type")!=="button"||$(this).prop("type")!=="select"){
+            } else if($(this).prop("type")!=="button"&&$(this).prop("type")!=="select-one"){
               $(this).val("");
             }
           });
