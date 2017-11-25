@@ -405,10 +405,10 @@
         });
 
         function clearInputFields(){
-          $(":input").each(function(){
+          $("#container :input").each(function(){
             if($(this).prop("type")=="checkbox"){
               $(this).prop("checked",false);
-            } else if($(this).prop("type")!=="button"||$(this).prop("type")!=="button"){
+            } else if($(this).prop("type")!=="button"||$(this).prop("type")!=="select"){
               $(this).val("");
             }
           });
