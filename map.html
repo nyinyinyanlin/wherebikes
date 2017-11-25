@@ -404,6 +404,16 @@
           }
         });
 
+        function clearInputFields(){
+          $(":input").each(function(){
+            if($(this).prop("type")=="checkbox"){
+              $(this).prop("checked",false);
+            } else if($(this).prop("type")!=="button"||$(this).prop("type")!=="button"){
+              $(this).val("");
+            }
+          });
+        }
+
         $("#cancel").on("click",function(){
           clearInputFields();
           $("#container").hide();
@@ -444,16 +454,6 @@
                 req_data = createDataReq("br");
                 req_data["amenity"] = "bicycle_rental";
               break;
-          }
-
-          function clearInputFields(){
-            $(":input").each(function(){
-              if($(this).prop("type")=="checkbox"){
-                $(this).prop("checked",false);
-              } else if($(this).prop("type")!=="button"||$(this).prop("type")!=="button"){
-                $(this).val("");
-              }
-            });
           }
 
           $.ajax({
