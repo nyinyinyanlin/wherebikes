@@ -36,6 +36,7 @@ function processData(data){
 }
 
 app.use(express.static(path.join(__dirname,'graphics')));
+app.use(express.static(path.join(__dirname,'scripts')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(methodOverride());
