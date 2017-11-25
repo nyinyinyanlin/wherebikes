@@ -13,6 +13,8 @@
     <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
             integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
             crossorigin=""></script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise"></script>
+    <script src="https://wherebikes.herokuapp.com/leaflet-bing-layer.js"></script>
     <style>
       html, body, #map {
         height: 100%;
@@ -293,6 +295,7 @@
           //shadowAnchor: [4, 62],  // the same for the shadow
           popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
         });
+        var BING_KEY = "Arqsmxff_Vub-_zHxl4ZJaq6I6ehwuVejO5w-GboGM4EO0dthpOqj5LiZUJ2Cvcm";
         var map = L.map('map').setView([16.8512554,96.1669349], 13);
         var standardTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                           maxZoom: 19,
@@ -302,7 +305,26 @@
                           maxZoom: 20,
                           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                         });
+        var bingTileLayer = L.tileLayer.bing(BING_KEY);
         standardTileLayer.addTo(map);
+
+        function addBikeMarker(data){
+          var bikeIcon;
+          var html = (data.name?"<strong>"+data.name+"</strong><br>":"");
+          if(data.shop){
+            bikeIcon = bikeShopIcon;
+            html += "<p>Type: Bicycle Shop</p><br>";
+          }else if(data.amenity=="bicycle_parking"){
+            bikeIcon = bikeParkingIcon;
+            html += "<p>Type: Bicycle Parking</p><br>";
+          }else if(data.amenity=="bicycle_rental"){
+            bikeIcon = bikeRentalIcon;
+            html += "<p>Type: Bicycle Rental</p><br>";
+          }
+
+          L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup().addTo(map);
+        }
+
         function populateMap(){
           $.ajax({
             type: "GET",
@@ -312,41 +334,36 @@
             success: function(dataset){
               if(dataset.length>0){
                 for(var i=0;i<dataset.length;i++){
-                  data = dataset[i];
-                  var bikeIcon;
-                  if(data.shop){
-                    bikeIcon = bikeShopIcon;
-                  }else if(data.amenity=="bicycle_parking"){
-                    bikeIcon = bikeParkingIcon;
-                  }else if(data.amenity=="bicycle_rental"){
-                    bikeIcon = bikeRentalIcon;
-                  }
-                  L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup("<strong>"+(data.name?data.name:"")+"</strong>").addTo(map);
+                  addBikeMarker(dataset[i]);
                 }
               }
             }
           });
         }
         populateMap();
+
         if($("#gpscb").is(":checked")){
           map.locate({setView: true, maxZoom: 18, enableHighAccuracy: true, watch: true});
         }
+
         $("#gpscb").change(function(){
           if(this.checked){
              map.locate({setView: true, maxZoom: 18, enableHighAccuracy: true, watch: true});
           } else {
              map.stopLocate();
           }
-        })
+        });
+
         $("#mapstylecb").change(function(){
           if(this.checked){
-             map.removeLayer(humanTileLayer);
+             map.removeLayer(bingTileLayer);
              standardTileLayer.addTo(map);
           } else {
              map.removeLayer(standardTileLayer);
-             humanTileLayer.addTo(map);
+             bingTileLayer.addTo(map);
           }
-        })
+        });
+
         var marker = L.marker(map.getCenter(),{draggable:false}).addTo(map);
         marker.on('click', function(e){
           $("#container").css("display","flex");
@@ -381,9 +398,11 @@
           $("#msg").html(poi.lat.toFixed(6)+" : "+poi.lng.toFixed(6));
         }
         map.on('move',onMapMove);
+
         $(".bp").hide();
         $(".br").hide();
         $(".bs").show();
+
         $("#category").on("change",function(){
           switch($("#category").val()){
             case "shop=bicycle":
@@ -403,6 +422,7 @@
               break;
           }
         });
+
         $("#cancel").on("click",function(){
           $("#container").hide();
         });
@@ -426,6 +446,7 @@
           });
           return request;
         }
+
         $("#submit").on("click",function(){
           var req_data;
           switch($("#category").val()){
@@ -442,6 +463,7 @@
                 req_data["amenity"] = "bicycle_rental";
               break;
           }
+
           $.ajax({
             type: "POST",
             url: "https://wherebikes.herokuapp.com/insert",
@@ -449,15 +471,7 @@
             data: req_data,
             success: function(data){
               if(data.status == "SUCCESS"){
-                var bikeIcon;
-                if(data.shop){
-                  bikeIcon = bikeShopIcon;
-                }else if(data.amenity=="bicycle_parking"){
-                  bikeIcon = bikeParkingIcon;
-                }else if(data.amenity=="bicycle_rental"){
-                  bikeIcon = bikeRentalIcon;
-                }
-                L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup("<strong>"+(data.name?data.name:"")+"</strong>").addTo(map);
+                addBikeMarker(data);
                 $(":input").each(function(){
                   if($(this).prop("type")=="checkbox"){
                     $(this).prop("checked",false);
