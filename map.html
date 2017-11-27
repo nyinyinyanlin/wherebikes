@@ -290,13 +290,13 @@
           delete data.name;
           if(data.shop){
             bikeIcon = bikeShopIcon;
-            html += "<p>Type: Bicycle Shop</p><br>";
+            html += "<p>Type: Bicycle Shop</p>";
           }else if(data.amenity=="bicycle_parking"){
             bikeIcon = bikeParkingIcon;
-            html += "<p>Type: Bicycle Parking</p><br>";
+            html += "<p>Type: Bicycle Parking</p>";
           }else if(data.amenity=="bicycle_rental"){
             bikeIcon = bikeRentalIcon;
-            html += "<p>Type: Bicycle Rental</p><br>";
+            html += "<p>Type: Bicycle Rental</p>";
           }
           delete data.amenity;
           delete data.shop;
