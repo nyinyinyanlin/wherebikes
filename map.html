@@ -287,6 +287,7 @@
         function addBikeMarker(data){
           var bikeIcon;
           var html = (data.name?"<strong>"+data.name+"</strong><br>":"");
+          delete data.name;
           if(data.shop){
             bikeIcon = bikeShopIcon;
             html += "<p>Type: Bicycle Shop</p><br>";
@@ -297,7 +298,11 @@
             bikeIcon = bikeRentalIcon;
             html += "<p>Type: Bicycle Rental</p><br>";
           }
-
+          delete data.amenity;
+          delete data.shop;
+          for(const key in data){
+            html += "<p>"+key+" : "+data[key]+"</p><br>";
+          }
           L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup(html).addTo(map);
         }
 
