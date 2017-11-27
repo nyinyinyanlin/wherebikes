@@ -301,7 +301,7 @@
           delete data.amenity;
           delete data.shop;
           for(const key in data){
-            html += "<p>"+key+" : "+data[key]+"</p><br>";
+            html += "<p>"+key+" : "+data[key]+"</p>";
           }
           L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup(html).addTo(map);
         }
