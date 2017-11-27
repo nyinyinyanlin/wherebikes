@@ -304,6 +304,10 @@
           }
           delete data.amenity;
           delete data.shop;
+          html += "<p> username : "+data.username+"</p>";
+          html += "<p> time : "+data.time+"</p>";
+          delete data.username;
+          delete data.time;
           for(const key in data){
             html += "<p>"+key+" : "+data[key]+"</p>";
           }
