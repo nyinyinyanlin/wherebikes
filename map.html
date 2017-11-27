@@ -290,7 +290,7 @@
 
         function addBikeMarker(data){
           var bikeIcon;
-          var html = "<div class='markerinfo'>"+(data.name?"<h2><strong>"+data.name+"</strong><h2>":"");
+          var html = "<div class='markerinfo'>"+(data.name?"<h2><strong>"+data.name+"</strong></h2>":"");
           delete data.name;
           if(data.shop){
             bikeIcon = bikeShopIcon;
