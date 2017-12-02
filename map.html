@@ -6,6 +6,8 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
+    <script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
           integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
           crossorigin=""/>
@@ -85,6 +87,10 @@
      <div id="map"></div>
      <script>
       $(document).ready(function(){
+        var bikeuser = Cookies.getJSON('bikeuser');
+        if(bikeuser){
+          $.redirect("https://wherebikes.herokuapp.com/contribute",{},"GET");
+        }
         var bikeShopIcon = L.icon({
           iconUrl: "https://wherebikes.herokuapp.com/shop.png",
           iconSize:     [25, 25],
