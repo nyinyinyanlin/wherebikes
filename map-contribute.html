@@ -1,0 +1,497 @@
+<html>
+  <head>
+    <title>wherebikes-contribute</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/png" href="https://wherebikes.herokuapp.com/shop.png"/>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+          integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+            integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+            crossorigin=""></script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise"></script>
+    <script src="https://wherebikes.herokuapp.com/leaflet-bing-layer.js"></script>
+    <style>
+
+      @font-face {
+        font-family:'Padauk';
+        src:local('Padauk'), url('https://mmwebfonts.comquas.com/fonts/padauk.woff') format('woff'), url('https://mmwebfonts.comquas.com/fonts/padauk.ttf') format('ttf');
+        unicode-range:U+1000-109F;
+      }
+
+      html, body, #map {
+        height: 100%;
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      /*
+      body, input[type="text"], input[type="button"], input[type="tel"], input[type="email"], input[type="number"], input[type="url"], select {
+        font-family:"Courier New", Courier, monospace,padauk,Yunghkio,Myanmar3,'Masterpiece Uni Sans';
+      }*/
+
+      * {
+        font-family:"Courier New", Courier, monospace,padauk,Yunghkio,Myanmar3,'Masterpiece Uni Sans';
+      }
+
+      #container {
+        width: 100vw;
+        height: 100%;
+        background-color: white;
+        position: absolute;
+        display: none;
+        overflow: scroll;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 4;
+      }
+
+      #map {
+        position: absolute;
+        display: block;
+        z-index: 1;
+      }
+
+      #msg {
+        position: absolute;
+        top: 2%;
+        height: 24px;
+        width: auto;
+        text-align: center;
+        vertical-align: middle;
+        background-color: white;
+        border-radius: 5px;
+        padding: 2px 8px 2px 8px;
+        box-shadow: 0px 0px 2px 1px #888888;
+        z-index: 2;
+      }
+
+      #gpscheckbox {
+        position: absolute;
+        bottom: 5%;
+        left: 3%;
+        width: auto;
+        padding: 2px 8px 2px 5px;
+        border-radius: 5px;
+        background-color: white;
+        box-shadow: 0px 0px 2px 1px #888888;
+        z-index: 3;
+      }
+
+      #gpscb {
+        vertical-align: middle;
+        height: 16px;
+        width: 16px;
+      }
+
+      #mapstyleselect {
+        position: absolute;
+        bottom: 5%;
+        right: 3%;
+        width: auto;
+        padding: 3px 8px 7px 8px;
+        border-radius: 5px;
+        background-color: white;
+        box-shadow: 0px 0px 2px 1px #888888;
+        z-index: 3;
+      }
+
+      .markerinfo {
+        line-height: 0.5;
+      }
+
+      .visible {
+        visibility: visible;
+      }
+
+      .bs .bp .br {
+        display: table-row;
+      }
+
+      table {
+        width: 100%;
+      }
+
+      table tr {
+        width: 100%;
+      }
+
+      table tr td {
+        width: 60%;
+      }
+
+      table tr td:first-child {
+        text-align: right;
+        width: 40%;
+      }
+    </style>
+  </head>
+  <body>
+     <div id="container">
+      <table>
+        <tr class="visible">
+          <td>အမျိုးအစား</td>
+          <td>
+            <select size="1" id="category">
+              <option value="shop=bicycle" selected="selected">စက်ဘီးဆိုင်</option>
+              <option value="amenity=bicycle_parking">စက်ဘီးပါကင်</option>
+              <option value="amenity=bicycle_rental">စက်ဘီးအငှား</option>
+            </select>
+          </td>
+        </tr>
+        <tr class="bs bp br">
+          <td>နာမည် (အင်္ဂလိပ်)</td>
+          <td><input id="name:en" type="text"></input></td>
+        </tr>
+        <tr class="bs bp br">
+          <td>နာမည် (မြန်မာ)</td>
+          <td><input id="name:my" type="text"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>လိပ်စာ</td>
+          <td><input id="addr" type="text"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>စက်ဘီးရောင်း</td>
+          <td><input id="service:bicycle:retail" type="checkbox"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>စက်ဘီးပြင်</td>
+          <td><input id="service:bicycle:repair" type="checkbox"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>စက်ဘီးငှား</td>
+          <td><input id="service:bicycle:rental" type="checkbox"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>တစ်ပတ်ရစ်</td>
+          <td><input id="service:bicycle:second_hand" type="checkbox"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>လေထိုး</td>
+          <td><input id="service:bicycle:pump" type="checkbox"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>ရေဆေး</td>
+          <td><input id="service:bicycle:cleaning" type="checkbox"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>ဖွင့်ချိန်</td>
+          <td><input id="opening_hours" type="text"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>ဖုန်း</td>
+          <td><input id="phone" type="tel"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>အီးမေးလ်</td>
+          <td><input id="email" type="email"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>ဝက်ဘ်ဆိုက်</td>
+          <td><input id="website" type="url"></input></td>
+        </tr>
+        <tr class="bs">
+          <td>Facebook</td>
+          <td><input id="facebook" type="url"></input></td>
+        </tr>
+        <tr class="bp">
+          <td>အမိုးအကာရှိ</td>
+          <td><input id="covered" type="checkbox"></input></td>
+        </tr>
+        <tr class="bp">
+          <td>လူတိုင်းရပ်နားနိုင်</td>
+          <td><input id="access" type="checkbox"></input></td>
+        </tr>
+        <tr class="bp br">
+          <td>စက်ဘီးအစီးရေ</td>
+          <td><input id="capacity" type="number"></input></td>
+        </tr>
+        <tr class="bp">
+          <td>ရပ်ခပေးရသည်</td>
+          <td><input id="fee" type="checkbox"></input></td>
+        </tr>
+        <tr class="bs bp br">
+          <td>လုပ်ကိုင်သူ</td>
+          <td><input id="operator" type="text"></input></td>
+        </tr>
+        <tr class="visible">
+          <td>
+            <input id="cancel" type="button" value="ပယ်ဖျက်"></input>
+          </td>
+          <td>
+            <input id="submit" type="button" value="စာရင်းထည့်"></input>
+          </td>
+        </tr>
+      </table>
+     </div>
+     <div id="msg">တည်နေရာ မသိ</div>
+     <div id="gpscheckbox">
+       <input type="checkbox" id="gpscb" name="gpscb" checked="true"></input><label for="gpscb">ဂျီပီအက်စ်</label>
+     </div>
+     <select size="1" id="mapstyleselect">
+       <option value="standard" selected="selected">ပုံမှန်မြေပုံ</option>
+       <option value="bing">Bing ကောင်းကင်မြေပုံ</option>
+       <option value="humanitarian">လူမှုအရေးပြမြေပုံ</option>
+     </select>
+     <div id="map"></div>
+     <script>
+      $(document).ready(function(){
+        var bikeuser = Cookies.getJSON('bikeuser');
+        if(bikeuser){
+          //do nothing here
+        }else{
+          $.redirect("https://wherebikes.herokuapp.com/login",{},"GET");
+        }
+
+        var poi;
+        var bikeShopIcon = L.icon({
+          iconUrl: "https://wherebikes.herokuapp.com/shop.png",
+          iconSize:     [25, 25],
+          popupAnchor:  [0, -13]
+        });
+        var bikeParkingIcon = L.icon({
+          iconUrl: "https://wherebikes.herokuapp.com/parking.png",
+          iconSize:     [25, 25],
+          popupAnchor:  [0, -13]
+        });
+        var bikeRentalIcon = L.icon({
+          iconUrl: "https://wherebikes.herokuapp.com/rental.png",
+          iconSize:     [25, 25],
+          popupAnchor:  [0, -13]
+        });
+
+        var map = L.map('map').setView([16.8512554,96.1669349], 13);
+        var standardTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                          maxZoom: 19,
+                          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        });
+        var humanTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+                          maxZoom: 20,
+                          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        });
+        var bingTileLayer = L.tileLayer.bing({
+                                              maxZoom:19,
+                                              bingMapsKey:"Arqsmxff_Vub-_zHxl4ZJaq6I6ehwuVejO5w-GboGM4EO0dthpOqj5LiZUJ2Cvcm"
+                                            });
+        standardTileLayer.addTo(map);
+
+        function addBikeMarker(data){
+          var bikeIcon;
+          var html = "<div class='markerinfo'>"+(data.name?"<h2><strong>"+data.name+"</strong></h2>":"");
+          delete data.name;
+          if(data.shop){
+            bikeIcon = bikeShopIcon;
+            html += "<p>Type: Bicycle Shop</p>";
+          }else if(data.amenity=="bicycle_parking"){
+            bikeIcon = bikeParkingIcon;
+            html += "<p>Type: Bicycle Parking</p>";
+          }else if(data.amenity=="bicycle_rental"){
+            bikeIcon = bikeRentalIcon;
+            html += "<p>Type: Bicycle Rental</p>";
+          }
+          delete data.amenity;
+          delete data.shop;
+          html += "<p> username : "+data.username+"</p>";
+          html += "<p> time : "+data.time+"</p>";
+          delete data.username;
+          delete data.time;
+          for(const key in data){
+            html += "<p>"+key+" : "+data[key]+"</p>";
+          }
+          html += "</div>"
+          L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup(html).addTo(map);
+        }
+
+        function populateMap(){
+          $.ajax({
+            type: "GET",
+            url: "https://wherebikes.herokuapp.com/dataset",
+            ContentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function(dataset){
+              if(dataset.length>0){
+                for(var i=0;i<dataset.length;i++){
+                  addBikeMarker(dataset[i]);
+                }
+              }
+            }
+          });
+        }
+        populateMap();
+
+        if($("#gpscb").is(":checked")){
+          map.locate({setView: true, maxZoom: 19, enableHighAccuracy: true, watch: true});
+        }
+
+        $("#gpscb").change(function(){
+          if(this.checked){
+             map.locate({setView: true, maxZoom: 19, enableHighAccuracy: true, watch: true});
+          } else {
+             map.stopLocate();
+          }
+        });
+
+        $("#mapstyleselect").change(function(){
+          switch($("#mapstyleselect").val()){
+            case "standard":
+              standardTileLayer.addTo(map);
+              map.removeLayer(bingTileLayer);
+              map.removeLayer(humanTileLayer);
+              break;
+            case "bing":
+              bingTileLayer.addTo(map);
+              map.removeLayer(standardTileLayer);
+              map.removeLayer(humanTileLayer);
+              break;
+            case "humanitarian":
+              humanTileLayer.addTo(map);
+              map.removeLayer(standardTileLayer);
+              map.removeLayer(bingTileLayer);
+              break;
+          }
+        });
+
+        var marker = L.marker(map.getCenter(),{draggable:false}).addTo(map);
+        marker.on('click', function(e){
+          $("#container").css("display","flex");
+        });
+
+        var circle;
+        function onLocationFound(e) {
+          if(circle!=undefined){
+            circle.setRadius(e.accuracy/2);
+          } else{
+            circle = L.circle(e.latlng,e.accuracy/2).addTo(map);
+          }
+        }
+        map.on('locationfound', onLocationFound);
+
+        function onLocationError(e) {
+          if(circle!=undefined){
+            map.removeLayer(circle);
+          }
+          circle = undefined;
+          alert(e.message);
+        }
+        map.on('locationerror', onLocationError);
+
+        function onMapMove(e){
+          poi = L.latLng(map.getCenter().lat,map.getCenter().lng);
+          poi = poi.wrap();
+          marker.setLatLng(poi);
+          if(circle!=undefined){
+            circle.setLatLng(poi);
+          }
+          $("#msg").html(poi.lat.toFixed(6)+" : "+poi.lng.toFixed(6));
+        }
+        map.on('move',onMapMove);
+
+        $(".bp").hide();
+        $(".br").hide();
+        $(".bs").show();
+
+        $("#category").on("change",function(){
+          switch($("#category").val()){
+            case "shop=bicycle":
+              $(".bp").hide(200);
+              $(".br").hide(200);
+              $(".bs").show(200);
+              break;
+            case "amenity=bicycle_parking":
+              $(".bs").hide(200);
+              $(".br").hide(200);
+              $(".bp").show(200);
+              break;
+            case "amenity=bicycle_rental":
+              $(".bs").hide(200);
+              $(".bp").hide(200);
+              $(".br").show(200);
+              break;
+          }
+        });
+
+        function clearInputFields(){
+          $("#container :input").each(function(){
+            if($(this).prop("type")=="checkbox"){
+              $(this).prop("checked",false);
+            } else if($(this).prop("type")!=="button"&&$(this).prop("type")!=="select-one"){
+              $(this).val("");
+            }
+          });
+        }
+
+        $("#cancel").on("click",function(){
+          clearInputFields();
+          $("#container").hide();
+        });
+
+        function createDataReq(className){
+          var request = {};
+          request["username"] = bikeuser.username;
+          request["password"] = bikeuser.password;
+          request["lat"] = poi.lat;
+          request["lon"] = poi.lng;
+          $("."+className+" :nth-child(2) :first-child").each(function(){
+            if($(this).prop("type")=="checkbox"){
+              if($(this).is(":checked")){
+                request[$(this).prop("id")] = "yes";
+              }
+            } else {
+                if($(this).val().length>0){
+                  request[$(this).prop("id")] = $(this).val();
+                }
+            }
+          });
+          return request;
+        }
+
+        $("#submit").on("click",function(){
+          var req_data;
+          switch($("#category").val()){
+            case "shop=bicycle":
+                req_data = createDataReq("bs");
+                req_data["shop"] = "bicycle";
+              break;
+            case "amenity=bicycle_parking":
+                req_data = createDataReq("bp");
+                req_data["amenity"] = "bicycle_parking";
+              break;
+            case "amenity=bicycle_rental":
+                req_data = createDataReq("br");
+                req_data["amenity"] = "bicycle_rental";
+              break;
+          }
+
+          $.ajax({
+            type: "POST",
+            url: "https://wherebikes.herokuapp.com/insert",
+            ContentType: 'application/json; charset=utf-8',
+            data: req_data,
+            success: function(data){
+              if(data.status == "SUCCESS"){
+                addBikeMarker(data);
+                clearInputFields();
+                $("#container").hide();
+              } else {
+                alert("Error Inserting");
+              }
+            }
+          });
+        });
+      });
+     </script>
+  </body>
+</html>
