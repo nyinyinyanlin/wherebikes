@@ -45,6 +45,10 @@ app.get('/', function(request, response, next){
     response.sendFile(path.join(__dirname,"map.html"));
 });
 
+app.get('/contribute', function(request, response, next){
+    response.sendFile(path.join(__dirname,"map-contribute.html"));
+});
+
 app.get('/login', function(request, response, next){
     response.sendFile(path.join(__dirname,"login.html"));
 });
