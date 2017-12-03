@@ -66,6 +66,33 @@ app.get('/dataset', function(request, response, next){
   });
 });
 
+app.get('/geojson', function(request, response, next){
+  db.collection('dataset').find({}).toArray(function(err, results) {
+    if(err){
+      response.status(200).send("Error");
+    } else {
+      var jsondata = {
+          "type": "FeatureCollection",
+          "features": []
+        };
+      for(var i=0;i<results.length;i++){
+        var feature = {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+             "type": "Point",
+             "coordinates": [
+                results[i].lat,results[i].lon
+              ]
+            }
+        };
+        jsondata.features[i] =  feature;
+      }
+      response.status(200).json(jsondata);
+    }
+  });
+});
+
 app.post('/check', function(request,response,next){
   db.collection('users').findOne({$and:[{"username":request.body.username},{"password":request.body.password}]},function(err,result){
     if(result){
