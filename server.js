@@ -82,7 +82,7 @@ app.get('/geojson', function(request, response, next){
           "geometry": {
              "type": "Point",
              "coordinates": [
-                results[i].lat,results[i].lon
+                Number(results[i].lat),Number(results[i].lon)
               ]
             }
         };
