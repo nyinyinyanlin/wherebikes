@@ -66,6 +66,13 @@ app.get('/dataset', function(request, response, next){
   });
 });
 
+app.get('/render',function(request,response,next){
+  response.writeHead(301,
+  {Location: "https://api.mapbox.com/styles/v1/nyinyinyanlin/cjaqik220hd4j2so1sm0rx8wi/static/96.166,16.825,11.4,0.00,0.00/1280x720@2x?access_token=pk.eyJ1IjoibnlpbnlpbnlhbmxpbiIsImEiOiJjaXpucW8wenkwMnp0MndrN281eDZsdnE3In0.7z5t1MAr9PDHRhABhC9_9A"}
+);
+response.end();
+});
+
 app.get('/geojson', function(request, response, next){
   db.collection('dataset').find({}).toArray(function(err, results) {
     if(err){
