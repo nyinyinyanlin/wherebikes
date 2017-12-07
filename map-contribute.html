@@ -111,6 +111,15 @@
         z-index: 3;
       }
 
+      #logout {
+        position: absolute;
+        top: 2%;
+        right: 3%;
+        width: auto;
+        box-shadow: 0px 0px 2px 1px #888888;
+        z-index: 3;
+      }
+
       .markerinfo {
         line-height: 0.5;
       }
@@ -244,6 +253,7 @@
      <div id="gpscheckbox">
        <input type="checkbox" id="gpscb" name="gpscb" checked="true"></input><label for="gpscb">ဂျီပီအက်စ်</label>
      </div>
+     <input type="button" id="logout" value="Logout"></input>
      <select size="1" id="mapstyleselect">
        <option value="standard" selected="selected">ပုံမှန်မြေပုံ</option>
        <option value="bing">Bing ကောင်းကင်မြေပုံ</option>
@@ -400,7 +410,7 @@
           if(circle!=undefined){
             circle.setLatLng(poi);
           }
-          $("#msg").html(poi.lat.toFixed(6)+" : "+poi.lng.toFixed(6));
+          $("#msg").html(poi.lat.toFixed(6)+":"+poi.lng.toFixed(6));
         }
         map.on('move',onMapMove);
 
@@ -479,6 +489,11 @@
                 req_data["amenity"] = "bicycle_rental";
               break;
           }
+
+          $("#logout").on("click",function(){
+            Cookies.remove("bikeuser");
+            $.redirect("https://wherebikes.herokuapp.com/",{},"GET");
+          });
 
           $.ajax({
             type: "POST",
