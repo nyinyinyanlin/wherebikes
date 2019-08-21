@@ -381,8 +381,8 @@
         });
 
         $("#logout").on("click",function(){
-          Cookies.remove("bikeuser", {path:'wherebikes.herokuapp.com'});
-          $.redirect("https://wherebikes.herokuapp.com/",{},"GET");
+          Cookies.remove("bikeuser", {path:'.wherebikes.herokuapp.com'});
+          $.redirect("https://wherebikes.herokuapp.com",{},"GET");
         });
 
         var marker = L.marker(map.getCenter(),{draggable:false}).addTo(map);
