@@ -59,7 +59,7 @@
             data: loginObj,
             success: function(data){
               if(data == "SUCCESS"){
-                Cookies.remove("bikeuser", {path:'.wherebikes.herokuapp.com'});
+                Cookies.remove('bikeuser', { path: '/', domain: '.wherebikes.herokuapp.com' });
                 Cookies.set("bikeuser",{"username":$("#username").val(),
                                 "password":$("#password").val()},
                          {
