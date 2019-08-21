@@ -1,195 +1,200 @@
 <html>
-  <head>
-    <title>wherebikes</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link rel="icon" type="image/png" href="https://wherebikes.herokuapp.com/shop.png"/>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
-          integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
-          crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
-            integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
-            crossorigin=""></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.2.0/dist/MarkerCluster.css" crossorigin=""/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.2.0/dist/MarkerCluster.Default.css" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet.markercluster@1.2.0/dist/leaflet.markercluster.js" crossorigin=""></script>
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise"></script>
-    <script src="https://wherebikes.herokuapp.com/leaflet-bing-layer.js"></script>
-    <style>
 
+<head>
+  <title>wherebikes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="icon" type="image/png" href="https://wherebikes.herokuapp.com/shop.png" />
+  <link rel="stylesheet" href='https://mmwebfonts.comquas.com/fonts/?font=pyidaungsu' />
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+    integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+    integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+    crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.2.0/dist/MarkerCluster.css" crossorigin="" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.2.0/dist/MarkerCluster.Default.css"
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.2.0/dist/leaflet.markercluster.js" crossorigin=""></script>
+  <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise"></script>
+  <script src="https://wherebikes.herokuapp.com/leaflet-bing-layer.js"></script>
+  <style>
+    /*
       @font-face {
         font-family:'Padauk';
         src:local('Padauk'), url('https://mmwebfonts.comquas.com/fonts/padauk.woff') format('woff'), url('https://mmwebfonts.comquas.com/fonts/padauk.ttf') format('ttf');
         unicode-range:U+1000-109F;
+      }*/
+
+    html,
+    body,
+    #map {
+      height: 100%;
+      width: 100vw;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    * {
+      font-family: "Courier New", Courier, monospace, Pyidaungsu;
+    }
+
+    #container {
+      width: 100vw;
+      height: 100%;
+      background-color: white;
+      position: absolute;
+      display: none;
+      overflow: scroll;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 4;
+    }
+
+    #map {
+      position: absolute;
+      display: block;
+      z-index: 1;
+    }
+
+    #mapstyleselect {
+      position: absolute;
+      bottom: 5%;
+      right: 3%;
+      width: auto;
+      padding: 3px 8px 7px 8px;
+      border-radius: 5px;
+      background-color: white;
+      box-shadow: 0px 0px 2px 1px #888888;
+      z-index: 3;
+    }
+
+    .markerinfo {
+      line-height: 0.5;
+    }
+  </style>
+</head>
+
+<body>
+  <select size="1" id="mapstyleselect">
+    <option value="standard" selected="selected">ပုံမှန်မြေပုံ</option>
+    <option value="bing">Bing ကောင်းကင်မြေပုံ</option>
+    <option value="humanitarian">လူမှုအရေးပြမြေပုံ</option>
+  </select>
+  <div id="map"></div>
+  <script>
+    $(document).ready(function () {
+      var bikeuser = Cookies.getJSON('bikeuser');
+      if (bikeuser) {
+        $.redirect("https://wherebikes.herokuapp.com/contribute", {}, "GET");
       }
-
-      html, body, #map {
-        height: 100%;
-        width: 100vw;
-        margin: 0;
-        padding: 0;
-      }
-
-      body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      * {
-        font-family:"Courier New", Courier, monospace,padauk,Yunghkio,Myanmar3,'Masterpiece Uni Sans';
-      }
-
-      #container {
-        width: 100vw;
-        height: 100%;
-        background-color: white;
-        position: absolute;
-        display: none;
-        overflow: scroll;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        z-index: 4;
-      }
-
-      #map {
-        position: absolute;
-        display: block;
-        z-index: 1;
-      }
-
-      #mapstyleselect {
-        position: absolute;
-        bottom: 5%;
-        right: 3%;
-        width: auto;
-        padding: 3px 8px 7px 8px;
-        border-radius: 5px;
-        background-color: white;
-        box-shadow: 0px 0px 2px 1px #888888;
-        z-index: 3;
-      }
-
-      .markerinfo {
-        line-height: 0.5;
-      }
-
-    </style>
-  </head>
-  <body>
-     <select size="1" id="mapstyleselect">
-       <option value="standard" selected="selected">ပုံမှန်မြေပုံ</option>
-       <option value="bing">Bing ကောင်းကင်မြေပုံ</option>
-       <option value="humanitarian">လူမှုအရေးပြမြေပုံ</option>
-     </select>
-     <div id="map"></div>
-     <script>
-      $(document).ready(function(){
-        var bikeuser = Cookies.getJSON('bikeuser');
-        if(bikeuser){
-          $.redirect("https://wherebikes.herokuapp.com/contribute",{},"GET");
-        }
-        var bikeShopIcon = L.icon({
-          iconUrl: "https://wherebikes.herokuapp.com/shop.png",
-          iconSize:     [25, 25],
-          popupAnchor:  [0, -13]
-        });
-        var bikeParkingIcon = L.icon({
-          iconUrl: "https://wherebikes.herokuapp.com/parking.png",
-          iconSize:     [25, 25],
-          popupAnchor:  [0, -13]
-        });
-        var bikeRentalIcon = L.icon({
-          iconUrl: "https://wherebikes.herokuapp.com/rental.png",
-          iconSize:     [25, 25],
-          popupAnchor:  [0, -13]
-        });
-        var markers = L.markerClusterGroup({maxClusterRadius:50,disableClusteringAtZoom:16});
-        var map = L.map('map').setView([16.839845812585686,96.16084635257721], 12);
-        var standardTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                          maxZoom: 19,
-                          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                        });
-        var humanTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-                          maxZoom: 20,
-                          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                        });
-        var bingTileLayer = L.tileLayer.bing({
-                                              maxZoom:19,
-                                              bingMapsKey:"Arqsmxff_Vub-_zHxl4ZJaq6I6ehwuVejO5w-GboGM4EO0dthpOqj5LiZUJ2Cvcm"
-                                            });
-        standardTileLayer.addTo(map);
-
-        function addBikeMarker(data){
-          var bikeIcon;
-          var html = "<div class='markerinfo'>"+(data.name?"<h2><strong>"+data.name+"</strong></h2>":"");
-          delete data.name;
-          if(data.shop){
-            bikeIcon = bikeShopIcon;
-            html += "<p>Type: Bicycle Shop</p>";
-          }else if(data.amenity=="bicycle_parking"){
-            bikeIcon = bikeParkingIcon;
-            html += "<p>Type: Bicycle Parking</p>";
-          }else if(data.amenity=="bicycle_rental"){
-            bikeIcon = bikeRentalIcon;
-            html += "<p>Type: Bicycle Rental</p>";
-          }
-          delete data.amenity;
-          delete data.shop;
-          html += "<p> username : "+data.username+"</p>";
-          html += "<p> time : "+data.time+"</p>";
-          delete data.username;
-          delete data.time;
-          for(const key in data){
-            html += "<p>"+key+" : "+data[key]+"</p>";
-          }
-          html += "</div>"
-          markers.addLayer(L.marker(L.latLng(data.lat,data.lon),{draggable:false,icon:bikeIcon}).bindPopup(html));
-        }
-
-        function populateMap(){
-          $.ajax({
-            type: "GET",
-            url: "https://wherebikes.herokuapp.com/dataset",
-            ContentType: 'application/json; charset=utf-8',
-            dataType: 'json',
-            success: function(dataset){
-              if(dataset.length>0){
-                for(var i=0;i<dataset.length;i++){
-                  addBikeMarker(dataset[i]);
-                }
-              }
-              map.addLayer(markers);
-            }
-          });
-        }
-        populateMap();
-
-        $("#mapstyleselect").change(function(){
-          switch($("#mapstyleselect").val()){
-            case "standard":
-              standardTileLayer.addTo(map);
-              map.removeLayer(bingTileLayer);
-              map.removeLayer(humanTileLayer);
-              break;
-            case "bing":
-              bingTileLayer.addTo(map);
-              map.removeLayer(standardTileLayer);
-              map.removeLayer(humanTileLayer);
-              break;
-            case "humanitarian":
-              humanTileLayer.addTo(map);
-              map.removeLayer(standardTileLayer);
-              map.removeLayer(bingTileLayer);
-              break;
-          }
-        });
+      var bikeShopIcon = L.icon({
+        iconUrl: "https://wherebikes.herokuapp.com/shop.png",
+        iconSize: [25, 25],
+        popupAnchor: [0, -13]
       });
-     </script>
-  </body>
+      var bikeParkingIcon = L.icon({
+        iconUrl: "https://wherebikes.herokuapp.com/parking.png",
+        iconSize: [25, 25],
+        popupAnchor: [0, -13]
+      });
+      var bikeRentalIcon = L.icon({
+        iconUrl: "https://wherebikes.herokuapp.com/rental.png",
+        iconSize: [25, 25],
+        popupAnchor: [0, -13]
+      });
+      var markers = L.markerClusterGroup({ maxClusterRadius: 50, disableClusteringAtZoom: 16 });
+      var map = L.map('map').setView([16.839845812585686, 96.16084635257721], 12);
+      var standardTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      });
+      var humanTileLayer = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        maxZoom: 20,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      });
+      var bingTileLayer = L.tileLayer.bing({
+        maxZoom: 19,
+        bingMapsKey: "Arqsmxff_Vub-_zHxl4ZJaq6I6ehwuVejO5w-GboGM4EO0dthpOqj5LiZUJ2Cvcm"
+      });
+      standardTileLayer.addTo(map);
+
+      function addBikeMarker(data) {
+        var bikeIcon;
+        var html = "<div class='markerinfo'>" + (data.name ? "<h2><strong>" + data.name + "</strong></h2>" : "");
+        delete data.name;
+        if (data.shop) {
+          bikeIcon = bikeShopIcon;
+          html += "<p>Type: Bicycle Shop</p>";
+        } else if (data.amenity == "bicycle_parking") {
+          bikeIcon = bikeParkingIcon;
+          html += "<p>Type: Bicycle Parking</p>";
+        } else if (data.amenity == "bicycle_rental") {
+          bikeIcon = bikeRentalIcon;
+          html += "<p>Type: Bicycle Rental</p>";
+        }
+        delete data.amenity;
+        delete data.shop;
+        html += "<p> username : " + data.username + "</p>";
+        html += "<p> time : " + data.time + "</p>";
+        delete data.username;
+        delete data.time;
+        for (const key in data) {
+          html += "<p>" + key + " : " + data[key] + "</p>";
+        }
+        html += "</div>"
+        markers.addLayer(L.marker(L.latLng(data.lat, data.lon), { draggable: false, icon: bikeIcon }).bindPopup(html));
+      }
+
+      function populateMap() {
+        $.ajax({
+          type: "GET",
+          url: "https://wherebikes.herokuapp.com/dataset",
+          ContentType: 'application/json; charset=utf-8',
+          dataType: 'json',
+          success: function (dataset) {
+            if (dataset.length > 0) {
+              for (var i = 0; i < dataset.length; i++) {
+                addBikeMarker(dataset[i]);
+              }
+            }
+            map.addLayer(markers);
+          }
+        });
+      }
+      populateMap();
+
+      $("#mapstyleselect").change(function () {
+        switch ($("#mapstyleselect").val()) {
+          case "standard":
+            standardTileLayer.addTo(map);
+            map.removeLayer(bingTileLayer);
+            map.removeLayer(humanTileLayer);
+            break;
+          case "bing":
+            bingTileLayer.addTo(map);
+            map.removeLayer(standardTileLayer);
+            map.removeLayer(humanTileLayer);
+            break;
+          case "humanitarian":
+            humanTileLayer.addTo(map);
+            map.removeLayer(standardTileLayer);
+            map.removeLayer(bingTileLayer);
+            break;
+        }
+      });
+    });
+  </script>
+</body>
+
 </html>
