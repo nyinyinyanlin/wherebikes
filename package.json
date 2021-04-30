@@ -4,7 +4,7 @@
   "description": "A data entry app for collection of bike shops and related data in Yangon. The task is arranged by bikesinygn and tech supported by ygnbinhaus.",
   "main": "server.js",
   "engines": {
-    "npm": "5.5.1"
+    "npm": "6.14.12"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
