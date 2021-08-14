@@ -16,7 +16,7 @@ date.locale('en', {
     A: ['AM', 'PM']
 });
 
-mongodb.MongoClient.connect(dbUrl, {poolSize: 5}, function (err, database) {
+mongodb.MongoClient.connect(dbUrl, function (err, database) {
   if (err) {
     console.log(err);
     process.exit(1);
