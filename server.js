@@ -12,7 +12,7 @@ var dbUrl = process.env.MONGODB_URI;
 var mapbox_key = process.env.MAPBOX_API_KEY;
 var db;
 
-date.setLocales('en', {
+date.locale('en', {
     A: ['AM', 'PM']
 });
 
