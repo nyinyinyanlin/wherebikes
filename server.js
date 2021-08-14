@@ -9,6 +9,7 @@ var methodOverride = require('method-override');
 var date = require('date-and-time');
 var port = process.env.PORT;
 var dbUrl = process.env.MONGODB_URI;
+var dbName = process.env.MONGODB_DB_NAME;
 var mapbox_key = process.env.MAPBOX_API_KEY;
 var db;
 
@@ -16,12 +17,12 @@ date.locale('en', {
     A: ['AM', 'PM']
 });
 
-mongodb.MongoClient.connect(dbUrl, function (err, database) {
+mongodb.MongoClient.connect(dbUrl, function (err, client) {
   if (err) {
     console.log(err);
     process.exit(1);
   }
-  db = database;
+  db = client.db(dbName);
   console.log("Database connection ready");
 });
 
