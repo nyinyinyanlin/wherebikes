@@ -24,9 +24,9 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "date-and-time": "^0.5.0",
+    "date-and-time": "^2.0.0",
     "express": "^4.16.2",
     "method-override": "^2.3.10",
-    "mongodb": "^2.2.33"
+    "mongodb": "^4.1.0"
   }
 }
